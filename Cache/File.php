@@ -20,6 +20,7 @@ class Cache_File extends \app\Instantiatable
 		$key = \str_replace('\\', '/', $key);
 		$cache = \app\CFS::config('ibidem\cache');
 		$cache_file = $cache['File']['cache.dir'].$key;
+		
 		if (\file_exists($cache_file))
 		{
 			$cache_info = \unserialize(\file_get_contents($cache_file));
@@ -48,6 +49,7 @@ class Cache_File extends \app\Instantiatable
 		$key = \str_replace('\\', '/', $key);
 		$cache = \app\CFS::config('ibidem\cache');
 		$cache_file = $cache['File']['cache.dir'].$key;
+		
 		if (\file_exists($cache_file))
 		{
 			\unlink($cache_file);

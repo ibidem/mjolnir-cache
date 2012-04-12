@@ -25,8 +25,8 @@ class CacheTester extends \PHPUnit_Framework_TestCase
 	function fetch()
 	{
 		$cache = static::$instance;
-		$cache->store('unittest:fetch', 'test:ok', 100000);
-		$this->assertEquals('test:ok', $cache->fetch('unittest:fetch', null));
+		$cache->store('unittest/fetch', 'test:ok', 10000);
+		$this->assertEquals('test:ok', $cache->fetch('unittest/fetch', null));
 	}
 	
 	/**
@@ -35,9 +35,9 @@ class CacheTester extends \PHPUnit_Framework_TestCase
 	function delete()
 	{
 		$cache = static::$instance;
-		$cache->store('unittest:fetch', 'test:ok', 100000);
-		$cache->delete('unittest:fetch');
-		$this->assertEquals('test:failed', $cache->fetch('unittest:fetch', 'test:failed'));
+		$cache->store('unittest/delete', 'test:ok', 10000);
+		$cache->delete('unittest/delete');
+		$this->assertEquals('test:failed', $cache->fetch('unittest/delete', 'test:failed'));
 	}
 	
 	/**
@@ -45,9 +45,7 @@ class CacheTester extends \PHPUnit_Framework_TestCase
 	 */
 	function store()
 	{
-		$cache = static::$instance;
-		$cache->store('unittest:fetch', 'test:ok', 0);
-		$this->assertEquals('test:failed', $cache->fetch('unittest:fetch', 'test:failed'));
+		// @see fetch
 	}
 
 } # class

@@ -1,6 +1,6 @@
 <?php namespace ibidem\cache;
 
-require_once 'Cache/template.Cache'.EXT;
+require_once 'Cache/template.CacheTester'.EXT;
 
 /**
  * @package    ibidem
@@ -13,7 +13,7 @@ class CacheTest extends CacheTester
 {
 	function setUp()
 	{
-		static::$instance = \app\Cache_APC::instance();
+		static::$instance = \app\Cache::instance();
 	}
 
 } # class

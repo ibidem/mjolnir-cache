@@ -1,6 +1,6 @@
 <?php namespace ibidem\cache;
 
-require_once 'template.Cache'.EXT;
+require_once 'template.CacheTester'.EXT;
 
 /**
  * @package    ibidem

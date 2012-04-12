@@ -1,6 +1,6 @@
 <?php namespace ibidem\cache;
 
-require_once 'template.Cache'.EXT;
+require_once 'template.CacheTester'.EXT;
 
 /**
  * @package    ibidem
@@ -13,7 +13,14 @@ class Cache_MemcachedTest extends CacheTester
 {	
 	function setUp()
 	{
-		static::$instance = \app\Cache_Memcached::instance();
+		if ( ! \extension_loaded('memcached'))
+		{
+			static::$instance = \app\Cache_File::instance();
+		}
+		else
+		{
+			static::$instance = \app\Cache_Memcached::instance();
+		}
 	}
 
 } # class
