@@ -40,8 +40,9 @@ class Cache_APC extends \app\Instantiatable
 	 * @param mixed default
 	 * @return mixed
 	 */
-	public function fetch($key, $default = null)
+	public function fetch($tag, $key, $default = null)
 	{
+		$key = $tag.'/'.$key;
 		$data = \apc_fetch(\str_replace(array('/', '\\', ' '), '_', $key), $success);
 
 		return $success ? $data : $default;
@@ -51,8 +52,9 @@ class Cache_APC extends \app\Instantiatable
 	 * @param string key
 	 * @return \ibidem\cache\Cache_APC $this
 	 */
-	public function delete($key)
+	public function delete($tag, $key)
 	{
+		$key = $tag.'/'.$key;
 		\apc_delete(\str_replace(array('/', '\\', ' '), '_', $key));
 		
 		return $this;
@@ -64,8 +66,9 @@ class Cache_APC extends \app\Instantiatable
 	 * @param integer lifetime (seconds)
 	 * @return \ibidem\cache\Cache_APC $this
 	 */
-	public function store($key, $data, $lifetime_seconds = null)
+	public function store($tag, $key, $data, $lifetime_seconds = null)
 	{
+		$key = $tag.'/'.$key;
 		if ($lifetime_seconds === null)
 		{
 			$lifetime_seconds = $cache['APC']['lifetime.default'];

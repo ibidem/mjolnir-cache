@@ -15,9 +15,10 @@ class Cache_File extends \app\Instantiatable
 	 * @param mixed default
 	 * @return mixed
 	 */
-	public function fetch($key, $default = null)
+	public function fetch($tag, $key, $default = null)
 	{
-		$key = \str_replace('\\', '/', $key);
+		$key = $tag.'/'.$key;
+		$key = self::standardize($key);
 		$cache = \app\CFS::config('ibidem\cache');
 		$cache_file = $cache['File']['cache.dir'].$key;
 		
@@ -41,21 +42,75 @@ class Cache_File extends \app\Instantiatable
 	}
 	
 	/**
+	 * @param string dir 
+	 */
+	private static function rrmdir($dir) 
+	{
+		$fp = \opendir($dir);
+		if ($fp) 
+		{
+			while ($f = \readdir($fp)) 
+			{
+				$file = $dir . "/" . $f;
+				if ($f == "." || $f == "..") 
+				{
+					continue;
+				}
+				else if (\is_dir($file) && ! \is_link($file)) 
+				{
+					self::rrmdir($file);
+				}
+				else 
+				{
+					\unlink($file);
+				}
+			}
+			\closedir($fp);
+			\rmdir($dir);
+		}
+	}
+
+	/**
 	 * @param string key
 	 * @return \ibidem\cache\Cache_File $this
 	 */
-	public function delete($key)
+	public function delete($tag, $key = null)
 	{
-		$key = \str_replace('\\', '/', $key);
-		$cache = \app\CFS::config('ibidem\cache');
-		$cache_file = $cache['File']['cache.dir'].$key;
-		
-		if (\file_exists($cache_file))
+		if ($key !== null)
 		{
-			\unlink($cache_file);
+			$key = $tag.'/'.$key;
+			$key = self::standardize($key);
+			$cache = \app\CFS::config('ibidem\cache');
+			$cache_file = $cache['File']['cache.dir'].$key;
+
+			if (\file_exists($cache_file))
+			{
+				\unlink($cache_file);
+			}
+		}
+		else # tag only
+		{
+			$key = $tag;
+			$key = self::standardize($key);
+			$cache = \app\CFS::config('ibidem\cache');
+			$cache_file = $cache['File']['cache.dir'].$key;
+
+			if (\file_exists($cache_file))
+			{
+				self::rrmdir($cache_file);
+			}
 		}
 		
 		return $this;
+	}
+	
+	/**
+	 * @param string key
+	 * @return string
+	 */
+	private static function standardize($key)
+	{
+		return \preg_replace('/[\?\.\:\|\<\>]/', ';', \str_replace('\\', '/', $key));
 	}
 	
 	/**
@@ -64,9 +119,10 @@ class Cache_File extends \app\Instantiatable
 	 * @param integer lifetime (seconds)
 	 * @return \ibidem\cache\Cache_File $this
 	 */
-	public function store($key, $data, $lifetime_seconds = null)
+	public function store($tag, $key, $data, $lifetime_seconds = null)
 	{
-		$key = \str_replace('\\', '/', $key);
+		$key = $tag.'/'.$key;
+		$key = self::standardize($key); ;
 		$cache = \app\CFS::config('ibidem\cache');
 		
 		if ($lifetime_seconds === null)

@@ -70,8 +70,9 @@ class Cache_Memcached extends \app\Instantiatable
 	 * @param mixed default
 	 * @return mixed
 	 */
-	public function fetch($key, $default = null)
+	public function fetch($tag, $key, $default = null)
 	{
+		$key .= $tag.'/'.$key;
 		$result = $this->memcached->get($key);
 		if (\Memcached::RES_SUCCESS === $this->memcached->getResultCode())
 		{
@@ -87,8 +88,9 @@ class Cache_Memcached extends \app\Instantiatable
 	 * @param string key
 	 * @return \ibidem\cache\Cache_Memecached $this
 	 */
-	public function delete($key)
+	public function delete($tag, $key)
 	{
+		$key .= $tag.'/'.$key;
 		$this->memcached->delete($key, 0);
 		return $this;
 	}
@@ -99,8 +101,9 @@ class Cache_Memcached extends \app\Instantiatable
 	 * @param integer lifetime (seconds)
 	 * @return \ibidem\cache\Cache_Memecached $this
 	 */
-	public function store($key, $data, $lifetime_seconds = null)
+	public function store($tag, $key, $data, $lifetime_seconds = null)
 	{
+		$key .= $tag.'/'.$key;
 		if ($lifetime_seconds === null)
 		{
 			$lifetime_seconds = $cache['Memcached']['lifetime.default'];
