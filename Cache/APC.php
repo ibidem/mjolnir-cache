@@ -52,7 +52,7 @@ class Cache_APC extends \app\Instantiatable
 	 * @param string key
 	 * @return \ibidem\cache\Cache_APC $this
 	 */
-	public function delete($tag, $key)
+	public function delete($tag, $key = null)
 	{
 		$key = $tag.'/'.$key;
 		\apc_delete(\str_replace(array('/', '\\', ' '), '_', $key));

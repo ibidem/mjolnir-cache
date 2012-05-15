@@ -46,7 +46,7 @@ class Cache_File extends \app\Instantiatable
 	 */
 	private static function rrmdir($dir) 
 	{
-		$fp = \opendir($dir);
+		$fp = \opendir(\realpath($dir));
 		if ($fp) 
 		{
 			while ($f = \readdir($fp)) 

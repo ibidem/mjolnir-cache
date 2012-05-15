@@ -88,7 +88,7 @@ class Cache_Memcached extends \app\Instantiatable
 	 * @param string key
 	 * @return \ibidem\cache\Cache_Memecached $this
 	 */
-	public function delete($tag, $key)
+	public function delete($tag, $key = null)
 	{
 		$key .= $tag.'/'.$key;
 		$this->memcached->delete($key, 0);
