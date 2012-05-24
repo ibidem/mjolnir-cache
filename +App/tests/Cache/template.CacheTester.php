@@ -24,9 +24,10 @@ class CacheTester extends \PHPUnit_Framework_TestCase
 	 */
 	function fetch()
 	{
+		$tag = 'test';
 		$cache = static::$instance;
-		$cache->store('unittest/fetch', 'test:ok', 10000);
-		$this->assertEquals('test:ok', $cache->fetch('unittest/fetch', null));
+		$cache->store($tag, 'unittest/fetch', 'test:ok', 10000);
+		$this->assertEquals('test:ok', $cache->fetch($tag, 'unittest/fetch', null));
 	}
 	
 	/**
@@ -34,10 +35,11 @@ class CacheTester extends \PHPUnit_Framework_TestCase
 	 */
 	function delete()
 	{
+		$tag = 'test';
 		$cache = static::$instance;
-		$cache->store('unittest/delete', 'test:ok', 10000);
-		$cache->delete('unittest/delete');
-		$this->assertEquals('test:failed', $cache->fetch('unittest/delete', 'test:failed'));
+		$cache->store($tag, 'unittest/delete', 'test:ok', 10000);
+		$cache->delete($tag, 'unittest/delete');
+		$this->assertEquals('test:failed', $cache->fetch($tag, 'unittest/delete', 'test:failed'));
 	}
 	
 	/**
