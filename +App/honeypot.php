@@ -2,7 +2,7 @@
 
 // This is a IDE honeypot. :)
 
-// HowTo: minion honeypot -n "ibidem\\cache"
+// HowTo: order honeypot -n 'ibidem\cache'
 
 class Cache_APC extends \ibidem\cache\Cache_APC { /** @return \ibidem\cache\Cache_APC */ static function instance() { return parent::instance(); } }
 class Cache_File extends \ibidem\cache\Cache_File { /** @return \ibidem\cache\Cache_File */ static function instance() { return parent::instance(); } }
