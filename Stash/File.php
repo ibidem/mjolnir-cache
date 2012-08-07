@@ -93,8 +93,6 @@ class Stash_File extends \app\Stash_Base
 		$cache = \app\CFS::config('ibidem\cache');
 		$cache_file = $cache['File']['cache.dir'].$key.static::EXT;
 		
-		\var_dump($cache_file); die;
-		
 		if (\file_exists($cache_file))
 		{
 			\unlink($cache_file);
