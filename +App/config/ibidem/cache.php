@@ -37,7 +37,7 @@
 	
 		'File' => array
 			(
-				'cache.dir' => APPPATH.'cache'.DIRECTORY_SEPARATOR.'cache.File'.DIRECTORY_SEPARATOR,
+				'cache.dir' => APPPATH.'cache'.DIRECTORY_SEPARATOR,
 				'lifetime.default' => 3600,
 			),
 	);

@@ -1,10 +1,16 @@
 <?php namespace app;
 
-// This is a IDE honeypot. :)
+// This is an IDE honeypot. It tells IDEs the class hirarchy, but otherwise has
+// no effect on your application. :)
 
-// HowTo: minion honeypot -n "ibidem\\cache"
+// HowTo: order honeypot -n 'ibidem\cache'
 
-class Cache_APC extends \ibidem\cache\Cache_APC { /** @return \ibidem\cache\Cache_APC */ static function instance() { return parent::instance(); } }
-class Cache_File extends \ibidem\cache\Cache_File { /** @return \ibidem\cache\Cache_File */ static function instance() { return parent::instance(); } }
-class Cache_Memcached extends \ibidem\cache\Cache_Memcached { /** @return \ibidem\cache\Cache_Memcached */ static function instance() { return parent::instance(); } }
-class Cache extends \ibidem\cache\Cache { /** @return \ibidem\cache\Cache */ static function instance() { return parent::instance(); } }
+class SQLStash extends \ibidem\cache\SQLStash { /** @return \ibidem\cache\SQLStash */ static function instance() { return parent::instance(); } }
+class Stash_APC extends \ibidem\cache\Stash_APC { /** @return \ibidem\cache\Stash_APC */ static function instance() { return parent::instance(); } }
+class Stash_Base extends \ibidem\cache\Stash_Base { /** @return \ibidem\cache\Stash_Base */ static function instance() { return parent::instance(); } }
+class Stash_File extends \ibidem\cache\Stash_File { /** @return \ibidem\cache\Stash_File */ static function instance() { return parent::instance(); } }
+class Stash_Memcached extends \ibidem\cache\Stash_Memcached { /** @return \ibidem\cache\Stash_Memcached */ static function instance() { return parent::instance(); } }
+class Stash extends \ibidem\cache\Stash {}
+class StashTags extends \ibidem\cache\StashTags { /** @return \ibidem\cache\StashTags */ static function instance() { return parent::instance(); } }
+trait Trait_TaggedStash { use \ibidem\cache\Trait_TaggedStash; }
+class ViewStash extends \ibidem\cache\ViewStash {}

@@ -2,23 +2,31 @@
 
 /**
  * @package    ibidem
- * @category   Cache
- * @author     Ibidem Team
- * @copyright  (c) 2012 Ibidem Team
+ * @category   Stash
+ * @author     Ibidem
+ * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Cache_Memcached extends \app\Instantiatable
-	implements \ibidem\types\Cache
+class Stash_Memcached extends \app\Stash_Base
+	implements 
+		\ibidem\types\Stash, 
+		\ibidem\types\TaggedStash
 {
+	use \app\Trait_TaggedStash;
+	
 	/**
-	 * @var \ibidem\cache\Cache_Memecached
+	 * @var \app\Stash_Memecached
 	 */
 	private static $instance;
 	
+	/**
+	 * @var \Memcached
+	 */
 	private $memcached;
 	
 	/**
-	 * @return \ibidem\cache\Cache_Memecached
+	 * @return \app\Stash_Memcached
+	 * @throws \app\Exception_NotApplicable
 	 */
 	public static function instance()
 	{
@@ -35,8 +43,7 @@ class Cache_Memcached extends \app\Instantiatable
 			
 			self::$instance = parent::instance();
 			
-			$memcached_config = \app\CFS::config('ibidem\cache');
-			$memcached_config = $memcached_config['Memcached'];
+			$memcached_config = \app\CFS::config('ibidem\cache')['Memcached'];
 			
 			if ($memcached_config['persistent_id'])
 			{
@@ -66,15 +73,36 @@ class Cache_Memcached extends \app\Instantiatable
 	}
 	
 	/**
-	 * @param string key
-	 * @param mixed default
-	 * @return mixed
+	 * Store a value under a key for a certain number of seconds.
 	 */
-	public function fetch($tag, $key, $default = null)
+	static function set($key, $data, $expires = null)
 	{
-		$key .= $tag.'/'.$key;
-		$result = $this->memcached->get($key);
-		if (\Memcached::RES_SUCCESS === $this->memcached->getResultCode())
+		$key = static::safe_key($key);
+		$config = \app\CFS::config('ibidem/cache');
+		if ($expires === null)
+		{
+			$expires = $config['Memcached']['lifetime.default'];
+		}
+		
+		static::instance()->memcached->set($key, \serialize($data), $expires);
+	}
+
+	/**
+	 * Retrieves data from $key
+	 * 
+	 * @return mixed data or default
+	 */
+	static function get($key, $default = null)
+	{
+		if ( ! \app\CFS::config('ibidem/base')['caching']) 
+		{
+			return $default;
+		}
+		
+		$key = static::safe_key($key);
+		$memcached = static::instance()->memcached;
+		$result = \unserialize($memcached->get($key));
+		if (\Memcached::RES_SUCCESS === $memcached->getResultCode())
 		{
 			return $result;
 		}
@@ -83,35 +111,14 @@ class Cache_Memcached extends \app\Instantiatable
 			return $default;
 		}
 	}
-	
+
 	/**
-	 * @param string key
-	 * @return \ibidem\cache\Cache_Memecached $this
+	 * Deletes $key
 	 */
-	public function delete($tag, $key = null)
+	static function delete($key)
 	{
-		$key .= $tag.'/'.$key;
-		$this->memcached->delete($key, 0);
-		return $this;
-	}
-	
-	/**
-	 * @param string key
-	 * @param mixed data
-	 * @param integer lifetime (seconds)
-	 * @return \ibidem\cache\Cache_Memecached $this
-	 */
-	public function store($tag, $key, $data, $lifetime_seconds = null)
-	{
-		$key .= $tag.'/'.$key;
-		if ($lifetime_seconds === null)
-		{
-			$lifetime_seconds = $cache['Memcached']['lifetime.default'];
-		}
-		
-		$this->memcached->set($key, $data, $lifetime_seconds);
-		
-		return $this;
+		$key = static::safe_key($key);
+		static::instance()->memcached->delete($key, 0);
 	}
 
 } # class
