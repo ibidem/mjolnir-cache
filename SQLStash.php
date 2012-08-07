@@ -17,6 +17,8 @@ class SQLStash extends \app\Instantiatable
 
 	protected $mass_sets = [];
 	protected $int_sets = [];
+	protected $paged = null;
+	protected $partial_key;
 
 	/**
 	 * @return \app\SQLCache
@@ -42,6 +44,13 @@ class SQLStash extends \app\Instantiatable
 		return $this;
 	}
 
+	function identity($identity)
+	{
+		$this->identity = $identity;
+		
+		return $this;
+	}
+	
 	/**
 	 * Sets the identity of the operation; to be used when processing cache 
 	 * effects
@@ -86,23 +95,33 @@ class SQLStash extends \app\Instantiatable
 	}
 
 	/**
+	 * @return \ibidem\cache\SQLStash $this
+	 */
+	function key($partial_key)
+	{
+		$this->partial_key = $partial_key;
+		
+		return $this;
+	}
+	
+	/**
+	 * @return \app\SQLStash $this
+	 */
+	function page($page, $limit, $offset = 0)
+	{
+		$this->paged = [$page, $limit, $offset];
+		
+		return $this;
+	}
+	
+	/**
 	 * Executes the given query, and processes cache consequences.
 	 */
 	function run()
-	{
-		$this->sql = \strtr($this->sql, [':table' => '`'.$this->table.'`']);
+	{		
+		$statement = \app\SQL::prepare($this->identifier, \strtr($this->sql, [':table' => '`'.$this->table.'`']));
 		
-		$statement = \app\SQL::prepare($this->identifier, $this->sql);
-		
-		foreach ($this->mass_sets as $mass_set)
-		{
-			$statement->mass_set($mass_set[1], $mass_set[0]);
-		}
-		
-		foreach ($this->int_sets as $label => $value)
-		{
-			$statement->set_int($label, $value);
-		}
+		static::process_statement($statement);
 		
 		$statement->execute();
 		
@@ -115,10 +134,41 @@ class SQLStash extends \app\Instantiatable
 	 *
 	 * @return array rows
 	 */
-	function all()
+	function fetch_all()
 	{
-		throw new \app\Exception_NotApplicable
-			('[all] method not implmented in ['.\get_called_class().'].');
+		if (empty($this->identity))
+		{
+			throw new \app\Exception_NotApplicable
+				('Identity not provided for snatch query.');
+		}
+		
+		$key = $this->identity.'__'.$this->partial_key;
+		
+		$result = \app\Stash::get($key, null);
+		
+		if ($result === null)
+		{
+			if (empty($this->table))
+			{
+				throw new \app\Exception_NotApplicable
+					('Table not provided for snatch query.');
+			}
+			
+			$statement = \app\SQL::prepare($this->identifier, \strtr($this->sql, [':table' => '`'.$this->table.'`']));
+			
+			if ($this->paged !== null)
+			{
+				$statement->page($this->paged[0], $this->paged[1], $this->paged[2]);
+			}
+			
+			static::process_statement($statement);
+			
+			$result = $statement->execute()->fetch_all();
+			
+			\app\Stash::store($key, $result, $this->tags);
+		}
+		
+		return $result;
 	}
 
 	/**
@@ -128,8 +178,29 @@ class SQLStash extends \app\Instantiatable
 	 */
 	function entry()
 	{
-		throw new \app\Exception_NotApplicable
-			('[entry] method not implmented in ['.\get_called_class().'].');
+		$result = $this->fetch_all();
+		
+		if (empty($result))
+		{
+			return null;
+		}
+		else
+		{
+			return $result[0];
+		}
+	}
+	
+	protected function process_statement($statement)
+	{
+		foreach ($this->mass_sets as $mass_set)
+		{
+			$statement->mass_set($mass_set[1], $mass_set[0]);
+		}
+		
+		foreach ($this->int_sets as $label => $value)
+		{
+			$statement->set_int($label, $value);
+		}
 	}
 
 } # class
