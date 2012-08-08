@@ -20,7 +20,7 @@ class Stash_File extends \app\Stash_Base
 	 * Store a value under a key for a certain number of seconds.
 	 */
 	static function set($key, $data, $expires = null)
-	{
+	{		
 		$key = static::safe_key($key);
 		$cache = \app\CFS::config('ibidem\cache');
 		
@@ -29,7 +29,8 @@ class Stash_File extends \app\Stash_Base
 			$expires = $cache['File']['lifetime.default'];
 		}
 		
-		//\preg_match('#^(.*/)?([^/]+)$#', $key, $matches);
+		if ($key == 'Model_User') throw new \Exception;
+		
 		$dir = $cache['File']['cache.dir'];
 		$file = $key;
 		\file_exists($dir) or \mkdir($dir, 0777, true);
