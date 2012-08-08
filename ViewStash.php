@@ -17,7 +17,7 @@ class ViewStash
  	 */
 	static function load($key, array $tags = [])
 	{
-		$stash_key = __CLASS__.':'.\app\Lang::get_lang().':'.$key;
+		$stash_key = '_ViewStash_'.\app\Lang::get_lang().'__'.$key;
 		$view = \app\Stash::get($stash_key, null);
 
 		if ($view !== null)

@@ -9,7 +9,7 @@
  */
 trait Trait_TaggedStash
 {
-	protected static $tag_stash_key = 'system_taged_key_refererence_stash';
+	protected static $tag_stash_key = '___stash_tag_reference';
 
 	/**
 	 * Tags the data key for reference.
