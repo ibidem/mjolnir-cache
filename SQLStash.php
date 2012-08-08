@@ -37,7 +37,7 @@ class SQLStash extends \app\Instantiatable
 	 * said table. We store which timers affect the table then react to them.
 	 * So once a timer is called the cache resets itself.
 	 */
-	function tags(array $tags)
+	function timers(array $tags)
 	{
 		$this->tags = $tags;
 
