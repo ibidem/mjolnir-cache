@@ -21,6 +21,7 @@ class SQLStash extends \app\Instantiatable
 	protected $partial_key;
 	protected $value_sets = [];
 	protected $order;
+	protected $constraints = [];
 
 	/**
 	 * @return \app\SQLCache
@@ -52,6 +53,16 @@ class SQLStash extends \app\Instantiatable
 	function identity($identity)
 	{
 		$this->identity = $identity;
+		
+		return $this;
+	}
+	
+	/**
+	 * @return \ibidem\cache\SQLStash $this
+	 */
+	function constraints(array $constraints)
+	{
+		$this->constraints = $constraints;
 		
 		return $this;
 	}
@@ -156,7 +167,7 @@ class SQLStash extends \app\Instantiatable
 	 *
 	 * @return array rows
 	 */
-	function fetch_all()
+	function fetch_all(array $format = null)
 	{
 		if (empty($this->identity))
 		{
@@ -176,13 +187,39 @@ class SQLStash extends \app\Instantiatable
 		{
 			$cachekey .= '__'.$this->partial_key;
 		}
-	
-		if ( ! empty($this->page))
-		{
-			$this->sql .= ' LIMIT :limit OFFSET :offset';
-			$cachekey .= '__p'.$this->page[0].'l'.$this->page[1].'o'.$this->page[2];
-		}
 		
+		if ( ! empty($this->constraints))
+		{
+			$constraints = ' WHERE ';
+			$constraints .= \app\Collection::implode
+				(
+					' AND ', # delimiter
+					$this->order, # source
+					
+					function ($k, $value) {
+						if (\is_bool($value))
+						{
+							return '`'.$k.'` = '.($value ? 'TRUE' : 'FALSE');
+						}
+						else if (\is_numeric($value))
+						{
+							return '`'.$k.'` = '.$value;
+						}
+						else if (\is_null($value))
+						{
+							return '`'.$k.'` IS NULL';
+						}
+						else # string, or string compatible
+						{
+							return '`'.$k.'` = '.\app\SQL::quote($value);
+						}
+					}
+				);
+				
+			$this->sql .= $constraints;
+			$cachekey .= '__con'.\sha1($constraints);
+		}
+	
 		if ( ! empty($this->order))
 		{
 			$order = ' ORDER BY ';
@@ -191,7 +228,13 @@ class SQLStash extends \app\Instantiatable
 			});
 			
 			$this->sql .= $order;
-			$cachekey .= '__'.\sha1($order);
+			$cachekey .= '__order'.\sha1($order);
+		}
+		
+		if ( ! empty($this->page))
+		{
+			$this->sql .= ' LIMIT :limit OFFSET :offset';
+			$cachekey .= '__p'.$this->page[0].'l'.$this->page[1].'o'.$this->page[2];
 		}
 
 		$result = \app\Stash::get($cachekey, null);
@@ -213,7 +256,7 @@ class SQLStash extends \app\Instantiatable
 			
 			static::process_statement($statement);
 			
-			$result = $statement->execute()->fetch_all();
+			$result = $statement->execute()->fetch_all($format);
 			
 			\app\Stash::store($cachekey, $result, $this->tags);
 		}
@@ -226,9 +269,9 @@ class SQLStash extends \app\Instantiatable
 	 *
 	 * @return array single row
 	 */
-	function entry()
+	function fetch_array(array $format = null)
 	{
-		$result = $this->fetch_all();
+		$result = $this->fetch_all($format);
 		
 		if (empty($result))
 		{
