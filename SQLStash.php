@@ -16,6 +16,8 @@ class SQLStash extends \app\Instantiatable
 	protected $table;
 
 	protected $mass_sets = [];
+	protected $mass_ints = [];
+	protected $mass_bools = [];
 	protected $int_sets = [];
 	protected $page = null;
 	protected $partial_key;
@@ -120,6 +122,26 @@ class SQLStash extends \app\Instantiatable
 	/**
 	 * @return \app\SQLCache $this
 	 */
+	function mass_int(array & $fields, array & $keys)
+	{
+		$this->mass_ints[] = [$fields, $keys];
+
+		return $this;
+	}
+	
+	/**
+	 * @return \app\SQLCache $this
+	 */
+	function mass_bool(array & $fields, array & $keys)
+	{
+		$this->mass_bools[] = [$fields, $keys];
+
+		return $this;
+	}
+	
+	/**
+	 * @return \app\SQLCache $this
+	 */
 	function order(array & $order)
 	{
 		$this->order = $order;
@@ -194,7 +216,7 @@ class SQLStash extends \app\Instantiatable
 			$constraints .= \app\Collection::implode
 				(
 					' AND ', # delimiter
-					$this->order, # source
+					$this->constraints, # source
 					
 					function ($k, $value) {
 						if (\is_bool($value))
@@ -223,8 +245,8 @@ class SQLStash extends \app\Instantiatable
 		if ( ! empty($this->order))
 		{
 			$order = ' ORDER BY ';
-			$order .= \app\Collection::implode(', ', $this->order, function ($k, $i) {
-				return '`'.$k.'` '.$i;
+			$order .= \app\Collection::implode(', ', $this->order, function ($query, $order) {
+				return \strpbrk($query, ' .') === false ? '`'.$query.'` '.$order : $query.' '.$order;
 			});
 			
 			$this->sql .= $order;
@@ -291,6 +313,16 @@ class SQLStash extends \app\Instantiatable
 		foreach ($this->mass_sets as $mass_set)
 		{
 			$statement->mass_set($mass_set[1], $mass_set[0]);
+		}
+		
+		foreach ($this->mass_ints as $mass_set)
+		{
+			$statement->mass_int($mass_set[1], $mass_set[0]);
+		}
+		
+		foreach ($this->mass_bools as $mass_set)
+		{
+			$statement->mass_bool($mass_set[1], $mass_set[0]);
 		}
 		
 		foreach ($this->int_sets as $label => $value)
