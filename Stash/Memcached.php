@@ -28,7 +28,7 @@ class Stash_Memcached extends \app\Stash_Base
 	 * @return \app\Stash_Memcached
 	 * @throws \app\Exception_NotApplicable
 	 */
-	public static function instance()
+	static function instance()
 	{
 		if (self::$instance)
 		{
