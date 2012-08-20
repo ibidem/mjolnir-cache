@@ -9,11 +9,18 @@ use Behat\Gherkin\Node\PyStringNode,
 
 \ibidem\base\Mjolnir::behat();
 
+use \app\Stash;
+
 /**
  * Features context.
  */
 class FeatureContext extends BehatContext
 {
+	/**
+	 * @var \ibidem\types\Stash
+	 */
+	protected $driver;
+	
     /**
      * Initializes context.
      * Every scenario gets it's own context object.
@@ -22,7 +29,16 @@ class FeatureContext extends BehatContext
      */
     public function __construct(array $parameters)
     {
-        \app\Collection::implode(' ', ['hello', 'world'], function ($i, $k) { return $k; });
+		// do nothing
+    }
+	
+	/**
+     * @Given /^a cache driver "([^"]*)"$/
+     */
+    public function aCacheDriver($driver)
+    {
+		$class = '\app\Stash_'.\ucfirst($driver);
+        $this->driver = $class::instance();
     }
 
 	/**
@@ -30,7 +46,7 @@ class FeatureContext extends BehatContext
      */
     public function aCachedEntryWithValue($key, $value)
     {
-        \app\Stash::set($key, $value);
+		$this->driver->set($key, $value);
     }
 
     /**
@@ -38,19 +54,15 @@ class FeatureContext extends BehatContext
      */
     public function iUpdateToValue($key, $value)
     {
-        \app\Stash::set($key, $value);
+        $this->driver->set($key, $value);
     }
 
     /**
      * @Then /^I should see cache entry "([^"]*)" as "([^"]*)"$/
      */
-    public function iShouldSeeCacheEntryAsValue($key, $expected_value)
+    public function iShouldSeeCacheEntryAsValue($key, $expected)
     {
-        $got = \app\Stash::get($key);
-		if ($got !== $expected_value)
-		{
-			throw new \app\Exception('Expected ['.$expected_value.'], but got ['.$got.'].');
-		}
+		\app\expects($this->driver->get($key)) -> equals($expected);
     }
 	
     /**
@@ -58,7 +70,7 @@ class FeatureContext extends BehatContext
      */
     public function aCachedEntryWithAndExpires($key, $value, $expires)
     {
-        \app\Stash::set($key, $value, $expires);
+		$this->driver->set($key, $value, $expires);
     }
 
     /**
@@ -66,11 +78,7 @@ class FeatureContext extends BehatContext
      */
     public function cacheEntryShouldBeNull($key)
     {
-        $got = \app\Stash::get($key);
-		if ($got !== null)
-		{
-			throw new \app\Exception('Expected [null], but got ['.$got.'].');
-		}
+		\app\expects($this->driver->get($key)) -> equals(null);
     }
 	
 	/**
@@ -78,8 +86,23 @@ class FeatureContext extends BehatContext
      */
     public function iDeleteTheCacheEntry($key)
     {
-        \app\Stash::delete($key);
+		$this->driver->delete($key);
     }
 	
+	/**
+     * @Given /^a cache entry "([^"]*)" with value "([^"]*)" and tag "([^"]*)"$/
+     */
+    public function aCacheEntryWithValueAndTag($key, $value, $tag)
+    {
+		$this->driver->store($key, $value, [$tag]);
+    }
+
+    /**
+     * @When /^I purge the tag "([^"]*)"$/
+     */
+    public function iPurgeTheTag($tag)
+    {
+        $this->driver->purge([$tag]);
+    }
 	
 }

@@ -1,24 +1,55 @@
-Feature: 
+@ibidem @caching
+Feature: Caching
   In order for caching to work.
-  A cache entry should be able to a store values.
-  A cache entry should expire.
-  A cache entry should be removable.
-  A cache entry should have a default.
+  As a developer
+  I need to be able to store and retrieve values.
 
-  Scenario: Updating a cache entry.
-     Given a cached entry "test" with "value1"
-       And I update "test" to "value2"
-      Then I should see cache entry "test" as "value2"
+  Scenario Outline: Updating a cache entry.
+     Given a cache driver "<driver>"
+       And a cached entry "<key>" with "<value_one>"
+       And I update "<key>" to "<value_two>"
+      Then I should see cache entry "<key>" as "<value_two>"
 
-  Scenario: Forcing a cache entry to expire.
-     Given a cached entry "test" with "some value" and expires "0"
+  Examples:
+		| driver    | key | value_one | value_two |
+		| apc       | key | old       | new       |
+		| file      | key | old       | new       |
+		| memcached | key | old       | new       |
+
+  Scenario Outline: Forcing a cache entry to expire.
+     Given a cache driver "<driver>"
+       And a cached entry "key" with "whatever value" and expires "<expires>"
+      Then cache entry "key" should be null
+
+  Examples:
+		| driver    | expires |
+		| apc       | 0       |
+		| file      | 0       |
+		| memcached | 0       | 
+		| apc       | -1      |
+		| file      | -1      |
+		| memcached | -1      |
+
+  Scenario Outline: Removing a cache entry.
+     Given a cache driver "<driver>"
+       And a cached entry "test" with "value1"
+      When I delete the cache entry "test"
       Then cache entry "test" should be null
 
-  Scenario: Expiring a cache entry via a negative value.
-     Given a cached entry "test" with "some value" and expires "-1"
-      Then cache entry "test" should be null
+  Examples:
+		| driver    | 
+		| apc       | 
+		| file      |      
+		| memcached | 
 
-  Scenario: Removing a cache entry.
-     Given a cached entry "test" with "value1"
-       And I delete the cache entry "test"
-      Then cache entry "test" should be null
+  Scenario Outline: Removing a cache entry by tag.
+     Given a cache driver "<driver>"
+       And a cache entry "tagged" with value "something" and tag "test"
+      When I purge the tag "test"
+      Then cache entry "tagged" should be null
+
+  Examples:
+		| driver    | 
+		| apc       | 
+		| file      |      
+		| memcached | 

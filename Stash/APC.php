@@ -13,6 +13,31 @@ class Stash_APC extends \app\Stash_Base
 		\ibidem\types\TaggedStash
 {
 	use \app\Trait_TaggedStash;
+
+	protected static $instance;
+	
+	/**
+	 * @return \app\Stash_Memcached
+	 * @throws \app\Exception_NotApplicable
+	 */
+	static function instance()
+	{
+		if (static::$instance)
+		{
+			return static::$instance;
+		}
+		else # uninitialized
+		{
+			if ( ! \extension_loaded('apc'))
+			{
+				throw new \app\Exception_NotApplicable('APC extention not loaded.');
+			}
+			
+			static::$instance = parent::instance();
+
+			return static::$instance;
+		}
+	}
 	
 	/**
 	 * Store a value under a key for a certain number of seconds.
