@@ -60,8 +60,6 @@ class Stash_APC extends \app\Stash_Base
 
 		$key = static::safe_key($key);
 		
-		echo PHP_EOL."storing: $key with expires $expires".PHP_EOL;
-		
 		if ( ! \apc_store($key, $data, $expires))
 		{
 			// failed to store data
