@@ -30,6 +30,29 @@ class FeatureContext extends BehatContext
 		// do nothing
 	}
 	
-	
+	/**
+     * @Given /^a cache driver "([^"]*)"$/
+     */
+    public function aCacheDriver($driver)
+    {
+		$class = '\app\Stash_'.\ucfirst($driver);
+		$this->driver = $class::instance();
+    }
+
+    /**
+     * @When /^I store a value "([^"]*)" under a key "([^"]*)"$/
+     */
+    public function iStoreAValueUnderAKey($data, $key)
+    {
+        $this->driver->set($key, $data);
+    }
+
+    /**
+     * @Then /^I should get the value "([^"]*)" when I ask for the cache "([^"]*)"$/
+     */
+    public function iShouldGetTheValueWhenIAskForTheCache($data, $key)
+    {
+        \app\expects($data)->equals($this->driver->get($key));
+    }
 
 } # context
