@@ -22,14 +22,14 @@ class Stash_File extends \app\Stash_Base
 	static function set($key, $data, $expires = null)
 	{		
 		$key = static::safe_key($key);
-		$cache = \app\CFS::config('ibidem\cache');
-		
+		$cache = \app\CFS::config('ibidem/cache')['File'];
+
 		if ($expires === null)
 		{
-			$expires = $cache['File']['lifetime.default'];
+			$expires = $cache['lifetime.default'];
 		}
 		
-		$dir = $cache['File']['cache.dir'];
+		$dir = $cache['cache.dir'];
 		$file = $key;
 		\file_exists($dir) or \mkdir($dir, 0777, true);
 		
@@ -61,8 +61,8 @@ class Stash_File extends \app\Stash_Base
 		}
 		
 		$key = static::safe_key($key);
-		$cache = \app\CFS::config('ibidem\cache');
-		$cache_file = $cache['File']['cache.dir'].$key.static::EXT;
+		$cache = \app\CFS::config('ibidem/cache')['File'];
+		$cache_file = $cache['cache.dir'].$key.static::EXT;
 		
 		if (\file_exists($cache_file))
 		{
@@ -89,8 +89,8 @@ class Stash_File extends \app\Stash_Base
 	static function delete($key)
 	{
 		$key = static::safe_key($key);
-		$cache = \app\CFS::config('ibidem\cache');
-		$cache_file = $cache['File']['cache.dir'].$key.static::EXT;
+		$cache = \app\CFS::config('ibidem/cache')['File'];
+		$cache_file = $cache['cache.dir'].$key.static::EXT;
 		
 		if (\file_exists($cache_file))
 		{

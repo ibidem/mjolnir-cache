@@ -20,7 +20,7 @@ class Stash_Memcached extends \app\Stash_Base
 	private static $instance;
 	
 	/**
-	 * @var \Memcached
+	 * @var \Memcache
 	 */
 	private $memcached;
 	
@@ -36,35 +36,35 @@ class Stash_Memcached extends \app\Stash_Base
 		}
 		else # uninitialized
 		{
-			if ( ! \extension_loaded('memcached'))
+			if ( ! \class_exists('Memcached'))
 			{
 				throw new \app\Exception_NotApplicable('memcached extention not loaded.');
 			}
 			
 			self::$instance = parent::instance();
 			
-			$memcached_config = \app\CFS::config('ibidem\cache')['Memcached'];
+			$memcache_config = \app\CFS::config('ibidem/cache')['Memcached'];
 			
-			if ($memcached_config['persistent_id'])
+			if ($memcache_config['persistent_id'])
 			{
-				$memcached = self::$instance->memcached = new \Memcached($memcached_config['persistent_id']);
+				$memcache = self::$instance->memcached = new \Memcached($memcache_config['persistent_id']);
 			}
 			else
 			{
-				$memcached = self::$instance->memcached = new \Memcached;
+				$memcache = self::$instance->memcached = new \Memcached;
 			}
 			
-			$servers = $memcached->getServerList();
+			$servers = $memcache->getServerList();
 			if (empty($servers))
 			{
-				$memcached->setOption(\Memcached::OPT_RECV_TIMEOUT, $memcached_config['timeout.recv']);
-			    $memcached->setOption(\Memcached::OPT_SEND_TIMEOUT, $memcached_config['timeout.send']);
-				$memcached->setOption(\Memcached::OPT_TCP_NODELAY, $memcached_config['tcp.nodelay']);
-				$memcached->setOption(\Memcached::OPT_PREFIX_KEY, $memcached_config['prefix']);
+				$memcache->setOption(\Memcache::OPT_RECV_TIMEOUT, $memcache_config['timeout.recv']);
+			    $memcache->setOption(\Memcache::OPT_SEND_TIMEOUT, $memcache_config['timeout.send']);
+				$memcache->setOption(\Memcache::OPT_TCP_NODELAY, $memcache_config['tcp.nodelay']);
+				$memcache->setOption(\Memcache::OPT_PREFIX_KEY, $memcache_config['prefix']);
 				
-				foreach ($memcached_config['servers'] as $server)
+				foreach ($memcache_config['servers'] as $server)
 				{
-					$memcached->addServer($server['host'], $server['port'], $server['weight']);
+					$memcache->addServer($server['host'], $server['port'], $server['weight']);
 				}
 			}
 
@@ -78,10 +78,10 @@ class Stash_Memcached extends \app\Stash_Base
 	static function set($key, $data, $expires = null)
 	{
 		$key = static::safe_key($key);
-		$config = \app\CFS::config('ibidem/cache');
+		$config = \app\CFS::config('ibidem/cache')['Memcached'];
 		if ($expires === null)
 		{
-			$expires = $config['Memcached']['lifetime.default'];
+			$expires = $config['lifetime.default'];
 		}
 		
 		static::instance()->memcached->set($key, \serialize($data), $expires);
@@ -100,9 +100,9 @@ class Stash_Memcached extends \app\Stash_Base
 		}
 		
 		$key = static::safe_key($key);
-		$memcached = static::instance()->memcached;
-		$result = \unserialize($memcached->get($key));
-		if (\Memcached::RES_SUCCESS === $memcached->getResultCode())
+		$memcache = static::instance()->memcached;
+		$result = \unserialize($memcache->get($key));
+		if (\Memcache::RES_SUCCESS === $memcache->getResultCode())
 		{
 			return $result;
 		}

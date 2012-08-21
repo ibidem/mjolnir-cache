@@ -13,5 +13,9 @@ Feature: Basic Caching
 		| driver    | value | key                                     |
 		| file      | test  | a_key                                   |
 		| file      | 1     | 1                                       |
+		| file      | 0     | 666                                     |
 		| file      | qwert | sjkfasklf jklafjaslkfjaslkfjaslf fklasl |
-		| memcached | test  | a_key                                   |
+		| memcache  | test  | a_key                                   |
+		| memcache  | 1     | 1                                       |
+		| memcache  | 0     | 666                                     |
+		| memcache  | qwert | sjkfasklf jklafjaslkfjaslkfjaslf fklasl |

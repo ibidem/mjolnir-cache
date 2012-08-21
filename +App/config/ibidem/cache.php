@@ -30,6 +30,13 @@
 					),
 			),
 	
+		'Memcache' => array
+			(
+				'lifetime.default' => 3600,				
+				'host' => 'localhost',
+				'port' => 11211,
+			),
+	
 		'APC' => array
 			(
 				'lifetime.default' => 3600,

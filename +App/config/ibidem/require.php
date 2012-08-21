@@ -18,7 +18,7 @@ return array
 				
 				'extension=php_memcache' => function ()
 					{
-						if (\extension_loaded('memcached'))
+						if(\class_exists('Memcache'))
 						{
 							return Requirement::available;
 						}

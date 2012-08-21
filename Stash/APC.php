@@ -52,10 +52,10 @@ class Stash_APC extends \app\Stash_Base
 	 */
 	static function set($key, $data, $expires = null)
 	{
-		$cache = \app\CFS::config('ibidem\cache');
+		$cache = \app\CFS::config('ibidem\cache')['APC'];
 		if ($expires === null)
 		{
-			$expires = $cache['APC']['lifetime.default'];
+			$expires = $cache['lifetime.default'];
 		}
 
 		$key = static::safe_key($key);
