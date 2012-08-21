@@ -14,6 +14,14 @@ class Stash_APC extends \app\Stash_Base
 {
 	use \app\Trait_TaggedStash;
 
+	/**
+	 * @var array of scheduled cache entries
+	 */
+	private static $caches = [];
+	
+	/**
+	 * @var \app\Stash_APC
+	 */
 	protected static $instance;
 	
 	/**
@@ -44,7 +52,27 @@ class Stash_APC extends \app\Stash_Base
 	 */
 	static function set($key, $data, $expires = null)
 	{
-		\apc_store(static::safe_key($key), \serialize($data), $expires);
+		$cache = \app\CFS::config('ibidem\cache');
+		if ($expires === null)
+		{
+			$expires = $cache['APC']['lifetime.default'];
+		}
+
+		$key = static::safe_key($key);
+		
+		echo PHP_EOL."storing: $key with expires $expires".PHP_EOL;
+		
+		if ( ! \apc_store($key, $data, $expires))
+		{
+			// failed to store data
+			\app\Log::message
+				(
+					'Bug', 
+					'APC store failed for key "'.$key.'" and value \''.\serialize($data).'\'. '
+					.'This can be caused by repeated stores with "apc.slam_defense = 1" in your configuration.', 
+					'bugs'.DIRECTORY_SEPARATOR
+				);
+		}
 	}
 
 	/**
@@ -60,6 +88,7 @@ class Stash_APC extends \app\Stash_Base
 		}
 		
 		$key = static::safe_key($key);
+		
 		$data = \apc_fetch($key, $success);
 		
 		return $success ? \unserialize($data) : $default;
@@ -70,7 +99,9 @@ class Stash_APC extends \app\Stash_Base
 	 */
 	static function delete($key)
 	{
-		\apc_delete(static::safe_key($key));
+		$key = static::safe_key($key);
+		
+		\apc_delete($key);
 	}
 
 } # class

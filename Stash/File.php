@@ -29,8 +29,6 @@ class Stash_File extends \app\Stash_Base
 			$expires = $cache['File']['lifetime.default'];
 		}
 		
-		if ($key == 'Model_User') throw new \Exception;
-		
 		$dir = $cache['File']['cache.dir'];
 		$file = $key;
 		\file_exists($dir) or \mkdir($dir, 0777, true);

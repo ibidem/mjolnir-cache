@@ -32,7 +32,7 @@
 	
 		'APC' => array
 			(
-				'default_expire' => 3600,
+				'lifetime.default' => 3600,
 			),
 	
 		'File' => array

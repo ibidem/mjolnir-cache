@@ -4,6 +4,18 @@ Feature: Caching
   As a developer
   I need to be able to store and retrieve values.
 
+  Scenario Outline: Basic storing and retrieving.
+     Given a cache driver "<driver>"
+       And a cached entry "key" with "x"
+      Then I should see cache entry "key" as "x"
+
+  Examples:
+		| driver    |
+		| apc       |
+		| file      |
+		| memcached |
+
+
   Scenario Outline: Updating a cache entry.
      Given a cache driver "<driver>"
        And a cached entry "<key>" with "<value_one>"
@@ -23,11 +35,11 @@ Feature: Caching
 
   Examples:
 		| driver    | expires |
-		| apc       | 0       |
 		| file      | 0       |
-		| memcached | 0       | 
-		| apc       | -1      |
+		| apc       | 0       |
+		| memcached | 0       |
 		| file      | -1      |
+		| apc       | -1      |
 		| memcached | -1      |
 
   Scenario Outline: Removing a cache entry.

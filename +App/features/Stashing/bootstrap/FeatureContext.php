@@ -9,8 +9,6 @@ use Behat\Gherkin\Node\PyStringNode,
 
 \ibidem\base\Mjolnir::behat();
 
-use \app\Stash;
-
 /**
  * Features context.
  */
@@ -60,9 +58,9 @@ class FeatureContext extends BehatContext
     /**
      * @Then /^I should see cache entry "([^"]*)" as "([^"]*)"$/
      */
-    public function iShouldSeeCacheEntryAsValue($key, $expected)
+    public function iShouldSeeCacheEntryAsValue($key, $new_value)
     {
-		\app\expects($this->driver->get($key)) -> equals($expected);
+		\app\expects($new_value)->equals($this->driver->get($key));
     }
 	
     /**
@@ -78,7 +76,7 @@ class FeatureContext extends BehatContext
      */
     public function cacheEntryShouldBeNull($key)
     {
-		\app\expects($this->driver->get($key)) -> equals(null);
+		\app\expects(null)->equals($this->driver->get($key));
     }
 	
 	/**
@@ -105,4 +103,12 @@ class FeatureContext extends BehatContext
         $this->driver->purge([$tag]);
     }
 	
+    /**
+     * @Given /^a cache entry "([^"]*)" with value "([^"]*)" and a tag "([^"]*)"$/
+     */
+    public function aCacheEntryWithValueAndATag($key, $value, $tag)
+    {
+        $this->driver->store($key, $value, [$tag]);
+    }
+
 }
