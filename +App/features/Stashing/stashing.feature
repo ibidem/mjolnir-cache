@@ -11,7 +11,6 @@ Feature: Caching
 
   Examples:
 		| driver    |
-		| apc       |
 		| file      |
 		| memcached |
 
@@ -24,7 +23,6 @@ Feature: Caching
 
   Examples:
 		| driver    | key | value_one | value_two |
-		| apc       | key | old       | new       |
 		| file      | key | old       | new       |
 		| memcached | key | old       | new       |
 
@@ -36,10 +34,8 @@ Feature: Caching
   Examples:
 		| driver    | expires |
 		| file      | 0       |
-		| apc       | 0       |
 		| memcached | 0       |
 		| file      | -1      |
-		| apc       | -1      |
 		| memcached | -1      |
 
   Scenario Outline: Removing a cache entry.
@@ -50,7 +46,6 @@ Feature: Caching
 
   Examples:
 		| driver    | 
-		| apc       | 
 		| file      |      
 		| memcached | 
 
@@ -62,6 +57,5 @@ Feature: Caching
 
   Examples:
 		| driver    | 
-		| apc       | 
 		| file      |      
 		| memcached | 
