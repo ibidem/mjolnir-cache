@@ -54,5 +54,21 @@ class FeatureContext extends BehatContext
     {
         \app\expects($data)->equals($this->driver->get($key));
     }
+	
+	/**
+     * @Given /^I delete the cache key "([^"]*)"$/
+     */
+    public function iDeleteTheCacheKey($key)
+    {
+        $this->driver->delete($key);
+    }
+
+    /**
+     * @Then /^the cache "([^"]*)" should be null$/
+     */
+    public function theCacheShouldBeNull($key)
+    {
+        \app\expects(null)->equals($this->driver->get($key));
+    }
 
 } # context
