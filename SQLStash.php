@@ -26,7 +26,7 @@ class SQLStash extends \app\Instantiatable
 	protected $constraints = [];
 
 	/**
-	 * @return \app\SQLCache
+	 * @return \app\SQLStash
 	 */
 	static function prepare($identifier, $sql)
 	{
@@ -210,6 +210,7 @@ class SQLStash extends \app\Instantiatable
 			$cachekey .= '__'.$this->partial_key;
 		}
 		
+		$sql = $this->sql;
 		if ( ! empty($this->constraints))
 		{
 			$constraints = ' WHERE ';
@@ -219,26 +220,29 @@ class SQLStash extends \app\Instantiatable
 					$this->constraints, # source
 					
 					function ($k, $value) {
+				
+						$k = \strpbrk($k, ' .()') === false ? '`'.$k.'`' : $k;
+				
 						if (\is_bool($value))
 						{
-							return '`'.$k.'` = '.($value ? 'TRUE' : 'FALSE');
+							return $k.' = '.($value ? 'TRUE' : 'FALSE');
 						}
 						else if (\is_numeric($value))
 						{
-							return '`'.$k.'` = '.$value;
+							return $k.' = '.$value;
 						}
 						else if (\is_null($value))
 						{
-							return '`'.$k.'` IS NULL';
+							return $k.' IS NULL';
 						}
 						else # string, or string compatible
 						{
-							return '`'.$k.'` = '.\app\SQL::quote($value);
+							return $k.' = '.\app\SQL::quote($value);
 						}
 					}
 				);
 				
-			$this->sql .= $constraints;
+			$sql .= $constraints;
 			$cachekey .= '__con'.\sha1($constraints);
 		}
 	
@@ -249,13 +253,13 @@ class SQLStash extends \app\Instantiatable
 				return \strpbrk($query, ' .') === false ? '`'.$query.'` '.$order : $query.' '.$order;
 			});
 			
-			$this->sql .= $order;
+			$sql .= $order;
 			$cachekey .= '__order'.\sha1($order);
 		}
 		
 		if ( ! empty($this->page))
 		{
-			$this->sql .= ' LIMIT :limit OFFSET :offset';
+			$sql .= ' LIMIT :limit OFFSET :offset';
 			$cachekey .= '__p'.$this->page[0].'l'.$this->page[1].'o'.$this->page[2];
 		}
 
@@ -269,7 +273,7 @@ class SQLStash extends \app\Instantiatable
 					('Table not provided for snatch query.');
 			}
 			
-			$statement = \app\SQL::prepare($this->identifier, \strtr($this->sql, [':table' => '`'.$this->table.'`']));
+			$statement = \app\SQL::prepare($this->identifier, \strtr($sql, [':table' => '`'.$this->table.'`']));
 			
 			if ($this->page !== null)
 			{

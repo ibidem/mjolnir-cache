@@ -1,4 +1,4 @@
-@ibidem @caching
+@ibidem @caching @drivers
 Feature: Basic Caching
   In order for caching to work.
   As a developer
@@ -9,7 +9,7 @@ Feature: Basic Caching
       When I store a value "<value>" under a key "<key>"
       Then I should get the value "<value>" when I ask for the cache "<key>"
     
-  Examples:
+  Scenarios:
 	| driver    | value | key         |
 	| file      | a b c | a_key       |
 	| file      | 1     | 1           |
@@ -26,7 +26,7 @@ Feature: Basic Caching
        And I delete the cache key "<key>"
       Then the cache "<key>" should be null
 
-  Examples:
+  Scenarios:
 	| driver    | value | key         |
 	| file      | a b c | a_key       |
 	| file      | 0     | 666         |
@@ -41,7 +41,7 @@ Feature: Basic Caching
 	   And I store a value "<value_two>" under a key "<key>"
       Then I should get the value "<value_two>" when I ask for the cache "<key>"
 
-  Examples:
+  Scenarios:
 	| driver    | value_one | value_two | key   |
 	| file      | abc       | xyz       | a_key |
 	| memcache  | abc       | xyz       | a_key |

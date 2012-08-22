@@ -1,4 +1,4 @@
-@ibidem @caching
+@ibidem @caching @drivers
 Feature: Basic Caching
   In order for tagged caching to work.
   As a developer
@@ -12,7 +12,7 @@ Feature: Basic Caching
       Then the cache "key_one" should be null
 	   And the cache "key_two" should be null
     
-  Examples:
+  Scenarios:
 	| driver    | tag |
 	| file      | xyz |
 	| file      | 0   |
