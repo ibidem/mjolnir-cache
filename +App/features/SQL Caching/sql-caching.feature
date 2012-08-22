@@ -13,6 +13,12 @@ Feature: Simple easy-to-use SQL querie caching
 	Then I should get the ids "1, 2, 3, 4, 5, 6, 7, 8"
      And I should get the titles "a, d, a, b, b, c, a, b"
 
+  Scenario: Anything can be retrieved any number of times.
+	When I execute the querie
+	Then I should get the ids "1, 2, 3, 4, 5, 6, 7, 8"
+    When I execute the querie again
+    Then I should get the ids "1, 2, 3, 4, 5, 6, 7, 8"
+
   Scenario: Retrieving from a database after an update.
 	When I execute the querie
 	Then I add an item with id "9" and title "a" to the database
@@ -66,6 +72,8 @@ Feature: Simple easy-to-use SQL querie caching
 	| title => b             | 4, 5, 8 |
 	| CONCAT(title,id) => b4 | 4       |
 	| id > 5 => true         | 6, 7, 8 |
+	| id => 3, title => a    | 3       |
+	| id => 3, title => b    |         |
 
   Scenario: Retrieving constraint results after an update.
 	When I limit the querie to page "1", limit "5" and offset "0"

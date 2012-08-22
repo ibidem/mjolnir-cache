@@ -9,6 +9,8 @@ use Behat\Gherkin\Node\PyStringNode,
 
 \ibidem\base\Mjolnir::behat();
 
+// @todo LOW - convert database code to mockup when I have time
+
 /**
  * Features context.
  */
@@ -22,7 +24,11 @@ class FeatureContext extends BehatContext
      */
     public function __construct(array $parameters)
     {
-		// do nothing
+		$base = \app\CFS::config('ibidem/base');
+		if ( ! isset($base['caching']) || ! $base['caching'])
+		{
+			throw new \app\Exception('Caching is not enabled.');
+		}
     }
 	
 	/**
@@ -31,28 +37,6 @@ class FeatureContext extends BehatContext
 	static function before()
 	{
 		\app\SQL::database('ibidem_testing');
-	}
-	
-	/**
-	 * @AfterFeature
-	 */
-	static function after()
-	{
-		\app\SQL::database('default');
-	}
-	
-	/**
-	 * @var \app\SQLStash
-	 */
-	protected $querie, $result;
-
-    /**
-     * @Given /^a mock database with ids "([^"]*)" and titles "([^"]*)"$/
-     */
-    public function aMockDatabaseWithIdsAndTitles($ids, $titles)
-    {
-		$ids = \explode(', ', $ids);
-		$titles = \explode(', ', $titles);
 		
 		\app\Schematic::destroy
 			(
@@ -69,6 +53,42 @@ class FeatureContext extends BehatContext
 					PRIMARY KEY(`id`)
 				'
 			);
+	}
+	
+	/**
+	 * @AfterFeature
+	 */
+	static function after()
+	{
+		\app\Schematic::destroy
+			(
+				'test_table'
+			);
+		
+		\app\SQL::database('default');
+	}
+	
+	/**
+	 * @var \app\SQLStash
+	 */
+	protected $querie, $result;
+
+    /**
+     * @Given /^a mock database with ids "([^"]*)" and titles "([^"]*)"$/
+     */
+    public function aMockDatabaseWithIdsAndTitles($ids, $titles)
+    {
+		$ids = \explode(', ', $ids);
+		$titles = \explode(', ', $titles);
+		
+		\app\SQL::prepare
+			(
+				__METHOD__.':truncate',
+				'
+					TRUNCATE TABLE test_table
+				'
+			)
+			->execute();
 		
 		\app\SQL::begin();
 		
@@ -109,7 +129,7 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @When /^I execute the querie$/
+     * @When /^I execute the querie( again)?$/
      */
     public function iExecuteTheQuerie()
     {
