@@ -164,6 +164,9 @@ class SQLStash extends \app\Instantiatable
 	 */
 	function page($page, $limit, $offset = 0)
 	{
+		$page = $page === null ? null : (int) $page;
+		$limit = $limit === null ? null : (int) $limit;
+		$offset = (int) $offset;
 		$this->page = [$page, $limit, $offset];
 		
 		return $this;
