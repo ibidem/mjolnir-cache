@@ -39,11 +39,10 @@ class Stash_File extends \app\Stash_Base
 				$dir.$file.static::EXT, 
 				\serialize
 					(
-						array
-						(
+						[
 							'expires' => \time() + $expires,
 							'data' => $data
-						)
+						]
 					)
 			);
 	}
