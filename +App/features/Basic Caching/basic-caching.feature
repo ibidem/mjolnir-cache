@@ -45,3 +45,17 @@ Feature: Basic Caching
 	| driver    | value_one | value_two | key   |
 	| file      | abc       | xyz       | a_key |
 	| memcache  | abc       | xyz       | a_key |
+
+  Scenario Outline: Storing and retrieving arrays
+	Given a cache driver "<driver>"
+	When I store the array "<array>" under a key "some_key"
+	Then I should get the same array back when I ask for the cache "some_key"
+
+  Scenarios:
+	| driver   | array                  |
+	| file     | 0 => 1, 1 => 3, 2 => 2 |
+	| file     | 0 => a, 1 => b, 2 => c |
+	| file     | 0 => d                 |
+	| memcache | 0 => 1, 1 => 3, 2 => 2 |
+	| memcache | 0 => a, 1 => b, 2 => c |
+	| memcache | 0 => d                 |
