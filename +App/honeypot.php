@@ -9,6 +9,7 @@ class SQLStash extends \ibidem\cache\SQLStash { /** @return \ibidem\cache\SQLSta
 class Stash_APC extends \ibidem\cache\Stash_APC { /** @return \ibidem\cache\Stash_APC */ static function instance() { return parent::instance(); } }
 class Stash_Base extends \ibidem\cache\Stash_Base { /** @return \ibidem\cache\Stash_Base */ static function instance() { return parent::instance(); } }
 class Stash_File extends \ibidem\cache\Stash_File { /** @return \ibidem\cache\Stash_File */ static function instance() { return parent::instance(); } }
+class Stash_Memcache extends \ibidem\cache\Stash_Memcache { /** @return \ibidem\cache\Stash_Memcache */ static function instance() { return parent::instance(); } }
 class Stash_Memcached extends \ibidem\cache\Stash_Memcached { /** @return \ibidem\cache\Stash_Memcached */ static function instance() { return parent::instance(); } }
 class Stash extends \ibidem\cache\Stash { /** @return \ibidem\cache\Stash */ static function instance() { return parent::instance(); } }
 trait Trait_TaggedStash { use \ibidem\cache\Trait_TaggedStash; }
