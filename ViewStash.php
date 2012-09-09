@@ -1,14 +1,14 @@
-<?php namespace ibidem\cache;
+<?php namespace mjolnir\cache;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Cache
  * @author     Ibidem Team
  * @copyright  (c) 2012 Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
 class ViewStash 
-	implements \ibidem\types\ViewStash
+	implements \mjolnir\types\ViewStash
 {
 	protected static $stash_keys = [];
 

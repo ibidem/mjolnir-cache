@@ -1,7 +1,7 @@
-<?php namespace ibidem\cache;
+<?php namespace mjolnir\cache;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Cache
  * @author     Ibidem Team
  * @copyright  (c) 2012 Ibidem Team
@@ -50,7 +50,7 @@ class SQLStash extends \app\Instantiatable
 	}
 
 	/**
-	 * @return \ibidem\cache\SQLStash $this
+	 * @return \mjolnir\cache\SQLStash $this
 	 */
 	function identity($identity)
 	{
@@ -60,7 +60,7 @@ class SQLStash extends \app\Instantiatable
 	}
 	
 	/**
-	 * @return \ibidem\cache\SQLStash $this
+	 * @return \mjolnir\cache\SQLStash $this
 	 */
 	function constraints(array $constraints)
 	{
@@ -150,7 +150,7 @@ class SQLStash extends \app\Instantiatable
 	}
 
 	/**
-	 * @return \ibidem\cache\SQLStash $this
+	 * @return \mjolnir\cache\SQLStash $this
 	 */
 	function key($partial_key)
 	{

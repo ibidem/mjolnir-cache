@@ -7,7 +7,7 @@ use Behat\Behat\Context\ClosuredContextInterface,
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
-\ibidem\base\Mjolnir::behat();
+\mjolnir\base\Mjolnir::behat();
 
 /**
  * Features context.
@@ -15,7 +15,7 @@ use Behat\Gherkin\Node\PyStringNode,
 class FeatureContext extends BehatContext
 {
 	/**
-	 * @var \ibidem\types\Stash
+	 * @var \mjolnir\types\Stash
 	 */
 	protected $driver;
 	

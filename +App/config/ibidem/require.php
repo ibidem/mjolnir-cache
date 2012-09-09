@@ -1,6 +1,6 @@
-<?php namespace ibidem\theme;
+<?php namespace mjolnir\theme;
 
-use \ibidem\types\Enum_Requirement as Requirement;
+use \mjolnir\types\Enum_Requirement as Requirement;
 
 return array
 	(

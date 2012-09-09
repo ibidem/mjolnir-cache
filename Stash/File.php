@@ -1,7 +1,7 @@
-<?php namespace ibidem\cache;
+<?php namespace mjolnir\cache;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Stash
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -9,8 +9,8 @@
  */
 class Stash_File extends \app\Stash_Base
 	implements 
-		\ibidem\types\Stash, 
-		\ibidem\types\TaggedStash
+		\mjolnir\types\Stash, 
+		\mjolnir\types\TaggedStash
 {
 	use \app\Trait_TaggedStash;
 	

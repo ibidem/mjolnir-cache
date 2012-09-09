@@ -1,7 +1,7 @@
-<?php namespace ibidem\cache;
+<?php namespace mjolnir\cache;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Cache
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team

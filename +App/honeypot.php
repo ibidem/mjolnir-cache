@@ -5,12 +5,12 @@
 
 // HowTo: order honeypot -n 'ibidem\cache'
 
-class SQLStash extends \ibidem\cache\SQLStash { /** @return \ibidem\cache\SQLStash */ static function instance() { return parent::instance(); } }
-class Stash_APC extends \ibidem\cache\Stash_APC { /** @return \ibidem\cache\Stash_APC */ static function instance() { return parent::instance(); } }
-class Stash_Base extends \ibidem\cache\Stash_Base { /** @return \ibidem\cache\Stash_Base */ static function instance() { return parent::instance(); } }
-class Stash_File extends \ibidem\cache\Stash_File { /** @return \ibidem\cache\Stash_File */ static function instance() { return parent::instance(); } }
-class Stash_Memcache extends \ibidem\cache\Stash_Memcache { /** @return \ibidem\cache\Stash_Memcache */ static function instance() { return parent::instance(); } }
-class Stash_Memcached extends \ibidem\cache\Stash_Memcached { /** @return \ibidem\cache\Stash_Memcached */ static function instance() { return parent::instance(); } }
-class Stash extends \ibidem\cache\Stash { /** @return \ibidem\cache\Stash */ static function instance() { return parent::instance(); } }
-trait Trait_TaggedStash { use \ibidem\cache\Trait_TaggedStash; }
-class ViewStash extends \ibidem\cache\ViewStash {}
+class SQLStash extends \mjolnir\cache\SQLStash { /** @return \mjolnir\cache\SQLStash */ static function instance() { return parent::instance(); } }
+class Stash_APC extends \mjolnir\cache\Stash_APC { /** @return \mjolnir\cache\Stash_APC */ static function instance() { return parent::instance(); } }
+class Stash_Base extends \mjolnir\cache\Stash_Base { /** @return \mjolnir\cache\Stash_Base */ static function instance() { return parent::instance(); } }
+class Stash_File extends \mjolnir\cache\Stash_File { /** @return \mjolnir\cache\Stash_File */ static function instance() { return parent::instance(); } }
+class Stash_Memcache extends \mjolnir\cache\Stash_Memcache { /** @return \mjolnir\cache\Stash_Memcache */ static function instance() { return parent::instance(); } }
+class Stash_Memcached extends \mjolnir\cache\Stash_Memcached { /** @return \mjolnir\cache\Stash_Memcached */ static function instance() { return parent::instance(); } }
+class Stash extends \mjolnir\cache\Stash { /** @return \mjolnir\cache\Stash */ static function instance() { return parent::instance(); } }
+trait Trait_TaggedStash { use \mjolnir\cache\Trait_TaggedStash; }
+class ViewStash extends \mjolnir\cache\ViewStash {}

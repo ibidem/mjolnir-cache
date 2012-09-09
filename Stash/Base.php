@@ -1,9 +1,9 @@
-<?php namespace ibidem\cache;
+<?php namespace mjolnir\cache;
 
 /**
  * Base class for stash files.
  * 
- * @package    ibidem
+ * @package    mjolnir
  * @category   Stash
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
