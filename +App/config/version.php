@@ -1,8 +1,8 @@
 <?php return array
 	(
-		'ibidem\cache' => array
+		'mjolnir\cache' => array
 			(
-				'major' => '1',
+				'major' => '0',
 				'minor' => '0',
 			)
 	);
