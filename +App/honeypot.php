@@ -3,7 +3,7 @@
 // This is an IDE honeypot. It tells IDEs the class hirarchy, but otherwise has
 // no effect on your application. :)
 
-// HowTo: order honeypot -n 'ibidem\cache'
+// HowTo: order honeypot -n 'mjolnir\cache'
 
 class SQLStash extends \mjolnir\cache\SQLStash { /** @return \mjolnir\cache\SQLStash */ static function instance() { return parent::instance(); } }
 class Stash_APC extends \mjolnir\cache\Stash_APC { /** @return \mjolnir\cache\Stash_APC */ static function instance() { return parent::instance(); } }
