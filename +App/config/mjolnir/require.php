@@ -4,7 +4,7 @@ use \mjolnir\types\Enum_Requirement as Requirement;
 
 return array
 	(
-		'ibidem\cache' => array
+		'mjolnir\stash' => array
 			(
 				 'extension=php_apc' => function ()
 					{
