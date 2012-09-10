@@ -22,7 +22,7 @@ class Stash_File extends \app\Stash_Base
 	static function set($key, $data, $expires = null)
 	{		
 		$key = static::safe_key($key);
-		$cache = \app\CFS::config('ibidem/cache')['File'];
+		$cache = \app\CFS::config('mjolnir/cache')['File'];
 
 		if ($expires === null)
 		{
@@ -54,13 +54,13 @@ class Stash_File extends \app\Stash_Base
 	 */
 	static function get($key, $default = null)
 	{
-		if ( ! \app\CFS::config('ibidem/base')['caching']) 
+		if ( ! \app\CFS::config('mjolnir/base')['caching']) 
 		{
 			return $default;
 		}
 		
 		$key = static::safe_key($key);
-		$cache = \app\CFS::config('ibidem/cache')['File'];
+		$cache = \app\CFS::config('mjolnir/cache')['File'];
 		$cache_file = $cache['cache.dir'].$key.static::EXT;
 		
 		if (\file_exists($cache_file))
@@ -88,7 +88,7 @@ class Stash_File extends \app\Stash_Base
 	static function delete($key)
 	{
 		$key = static::safe_key($key);
-		$cache = \app\CFS::config('ibidem/cache')['File'];
+		$cache = \app\CFS::config('mjolnir/cache')['File'];
 		$cache_file = $cache['cache.dir'].$key.static::EXT;
 		
 		if (\file_exists($cache_file))

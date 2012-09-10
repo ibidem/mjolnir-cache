@@ -52,7 +52,7 @@ class Stash_APC extends \app\Stash_Base
 	 */
 	static function set($key, $data, $expires = null)
 	{
-		$cache = \app\CFS::config('ibidem/cache')['APC'];
+		$cache = \app\CFS::config('mjolnir/cache')['APC'];
 		if ($expires === null)
 		{
 			$expires = $cache['lifetime.default'];
@@ -80,7 +80,7 @@ class Stash_APC extends \app\Stash_Base
 	 */
 	static function get($key, $default = null)
 	{
-		if ( ! \app\CFS::config('ibidem/base')['caching']) 
+		if ( ! \app\CFS::config('mjolnir/base')['caching']) 
 		{
 			return $default;
 		}

@@ -43,7 +43,7 @@ class Stash_Memcache extends \app\Stash_Base
 			
 			self::$instance = parent::instance();
 			
-			$memcache_config = \app\CFS::config('ibidem/cache')['Memcache'];
+			$memcache_config = \app\CFS::config('mjolnir/cache')['Memcache'];
 			
 			self::$instance->memcache = new \Memcache;
 			self::$instance->memcache->connect($memcache_config['host'], $memcache_config['port']);
@@ -58,7 +58,7 @@ class Stash_Memcache extends \app\Stash_Base
 	static function set($key, $data, $expires = null)
 	{
 		$key = static::safe_key($key);
-		$config = \app\CFS::config('ibidem/cache')['Memcache'];
+		$config = \app\CFS::config('mjolnir/cache')['Memcache'];
 		if ($expires === null)
 		{
 			$expires = $config['lifetime.default'];
@@ -74,7 +74,7 @@ class Stash_Memcache extends \app\Stash_Base
 	 */
 	static function get($key, $default = null)
 	{
-		if ( ! \app\CFS::config('ibidem/base')['caching']) 
+		if ( ! \app\CFS::config('mjolnir/base')['caching']) 
 		{
 			return $default;
 		}

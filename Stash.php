@@ -14,7 +14,7 @@ class Stash extends \app\Instantiatable
 	 */
 	static function set($key, $data, $expires = null)
 	{
-		$class = '\app\Stash_'.\app\CFS::config('ibidem/cache')['default.cache'];
+		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
 		$class::set($key, $data, $expires);
 	}
 
@@ -25,7 +25,7 @@ class Stash extends \app\Instantiatable
 	 */
 	static function get($key, $default = null)
 	{
-		$class = '\app\Stash_'.\app\CFS::config('ibidem/cache')['default.cache'];
+		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
 		return $class::get($key, $default);
 	}
 
@@ -34,7 +34,7 @@ class Stash extends \app\Instantiatable
 	 */
 	static function delete($key)
 	{
-		$class = '\app\Stash_'.\app\CFS::config('ibidem/cache')['default.cache'];
+		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
 		$class::delete($key);
 	}
 	
@@ -43,7 +43,7 @@ class Stash extends \app\Instantiatable
 	 */
 	static function store($key, $data, array $tags = [], $expires = null)
 	{
-		$class = '\app\Stash_'.\app\CFS::config('ibidem/cache')['default.cache'];
+		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
 		$class::store($key, $data, $tags, $expires);
 	}
 
@@ -52,7 +52,7 @@ class Stash extends \app\Instantiatable
 	 */
 	static function purge(array $tags)
 	{
-		$class = '\app\Stash_'.\app\CFS::config('ibidem/cache')['default.cache'];
+		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
 		$class::purge($tags);
 	}
 
