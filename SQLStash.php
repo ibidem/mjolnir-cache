@@ -23,6 +23,7 @@ class SQLStash extends \app\Instantiatable
 	protected $partial_key;
 	protected $value_sets = [];
 	protected $order;
+	protected $group_by;
 	protected $constraints = [];
 
 	/**
@@ -38,7 +39,7 @@ class SQLStash extends \app\Instantiatable
 	}
 
 	/**
-	 * Are methods that applied to a table, invalidate any cached queries to 
+	 * Are methods that applied to a table, invalidate any cached queries to
 	 * said table. We store which timers affect the table then react to them.
 	 * So once a timer is called the cache resets itself.
 	 */
@@ -55,22 +56,22 @@ class SQLStash extends \app\Instantiatable
 	function identity($identity)
 	{
 		$this->identity = $identity;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * @return \mjolnir\cache\SQLStash $this
 	 */
 	function constraints(array $constraints)
 	{
 		$this->constraints = $constraints;
-		
+
 		return $this;
 	}
-	
+
 	/**
-	 * Sets the identity of the operation; to be used when processing cache 
+	 * Sets the identity of the operation; to be used when processing cache
 	 * effects
 	 *
 	 * @return \app\SQLCache $this
@@ -101,11 +102,11 @@ class SQLStash extends \app\Instantiatable
 
 		return $this;
 	}
-	
+
 	function set($label, $value)
 	{
 		$this->value_sets[$label] = $value;
-		
+
 		return $this;
 	}
 
@@ -118,7 +119,7 @@ class SQLStash extends \app\Instantiatable
 
 		return $this;
 	}
-	
+
 	/**
 	 * @return \app\SQLCache $this
 	 */
@@ -128,7 +129,7 @@ class SQLStash extends \app\Instantiatable
 
 		return $this;
 	}
-	
+
 	/**
 	 * @return \app\SQLCache $this
 	 */
@@ -138,14 +139,14 @@ class SQLStash extends \app\Instantiatable
 
 		return $this;
 	}
-	
+
 	/**
 	 * @return \app\SQLCache $this
 	 */
 	function order(array & $order)
 	{
 		$this->order = $order;
-		
+
 		return $this;
 	}
 
@@ -155,10 +156,10 @@ class SQLStash extends \app\Instantiatable
 	function key($partial_key)
 	{
 		$this->partial_key = $partial_key;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * @return \app\SQLStash $this
 	 */
@@ -168,21 +169,30 @@ class SQLStash extends \app\Instantiatable
 		$limit = $limit === null ? null : (int) $limit;
 		$offset = (int) $offset;
 		$this->page = [$page, $limit, $offset];
-		
+
 		return $this;
 	}
-	
+
+	/**
+	 * @return \app\SQLStash $this
+	 */
+	function group_by($statement)
+	{
+		$this->group_by = $statement;
+		return $this;
+	}
+
 	/**
 	 * Executes the given query, and processes cache consequences.
 	 */
 	function run()
 	{
 		$statement = \app\SQL::prepare($this->identifier, \strtr($this->sql, [':table' => '`'.$this->table.'`']));
-		
+
 		static::process_statement($statement);
-		
+
 		$statement->execute();
-		
+
 		// invalidte tags
 		\app\Stash::purge($this->tags);
 	}
@@ -199,20 +209,20 @@ class SQLStash extends \app\Instantiatable
 			throw new \app\Exception_NotApplicable
 				('Identity not provided for snatch query.');
 		}
-		
+
 		if (empty($this->partial_key))
 		{
 			throw new \app\Exception_NotApplicable
 				('Partial key not provided for snatch query.');
 		}
-		
+
 		$cachekey = $this->identity;
-		
+
 		if ( ! empty($this->partial_key))
 		{
 			$cachekey .= '__'.$this->partial_key;
 		}
-		
+
 		$sql = $this->sql;
 		if ( ! empty($this->constraints))
 		{
@@ -221,11 +231,11 @@ class SQLStash extends \app\Instantiatable
 				(
 					' AND ', # delimiter
 					$this->constraints, # source
-					
+
 					function ($k, $value) {
-				
+
 						$k = \strpbrk($k, ' .()') === false ? '`'.$k.'`' : $k;
-				
+
 						if (\is_bool($value))
 						{
 							return $k.' = '.($value ? 'TRUE' : 'FALSE');
@@ -244,22 +254,29 @@ class SQLStash extends \app\Instantiatable
 						}
 					}
 				);
-				
+
 			$sql .= $constraints;
 			$cachekey .= '__con'.\sha1($constraints);
 		}
-	
+
+		if ( ! empty($this->group_by))
+		{
+			$group_by = ' GROUP BY '.$this->group_by;
+			$sql .= $group_by;
+			$cachekey .= '__groupby'.\sha1($group_by);
+		}
+
 		if ( ! empty($this->order))
 		{
 			$order = ' ORDER BY ';
 			$order .= \app\Collection::implode(', ', $this->order, function ($query, $order) {
 				return \strpbrk($query, ' .') === false ? '`'.$query.'` '.$order : $query.' '.$order;
 			});
-			
+
 			$sql .= $order;
 			$cachekey .= '__order'.\sha1($order);
 		}
-		
+
 		if ( ! empty($this->page))
 		{
 			$sql .= ' LIMIT :limit OFFSET :offset';
@@ -267,7 +284,7 @@ class SQLStash extends \app\Instantiatable
 		}
 
 		$result = \app\Stash::get($cachekey, null);
-		
+
 		if ($result === null)
 		{
 			if (empty($this->table))
@@ -275,21 +292,21 @@ class SQLStash extends \app\Instantiatable
 				throw new \app\Exception_NotApplicable
 					('Table not provided for snatch query.');
 			}
-			
+
 			$statement = \app\SQL::prepare($this->identifier, \strtr($sql, [':table' => '`'.$this->table.'`']));
-			
+
 			if ($this->page !== null)
 			{
 				$statement->page($this->page[0], $this->page[1], $this->page[2]);
 			}
-			
+
 			static::process_statement($statement);
-			
+
 			$result = $statement->execute()->fetch_all($format);
-			
+
 			\app\Stash::store($cachekey, $result, $this->tags);
 		}
-		
+
 		return $result;
 	}
 
@@ -301,7 +318,7 @@ class SQLStash extends \app\Instantiatable
 	function fetch_array(array $format = null)
 	{
 		$result = $this->fetch_all($format);
-		
+
 		if (empty($result))
 		{
 			return null;
@@ -311,7 +328,7 @@ class SQLStash extends \app\Instantiatable
 			return $result[0];
 		}
 	}
-	
+
 	/**
 	 * Include all sets in statement
 	 */
@@ -321,22 +338,22 @@ class SQLStash extends \app\Instantiatable
 		{
 			$statement->mass_set($mass_set[1], $mass_set[0]);
 		}
-		
+
 		foreach ($this->mass_ints as $mass_set)
 		{
 			$statement->mass_int($mass_set[1], $mass_set[0]);
 		}
-		
+
 		foreach ($this->mass_bools as $mass_set)
 		{
 			$statement->mass_bool($mass_set[1], $mass_set[0]);
 		}
-		
+
 		foreach ($this->int_sets as $label => $value)
 		{
 			$statement->set_int($label, $value);
 		}
-		
+
 		foreach ($this->value_sets as $label => $value)
 		{
 			$statement->set($label, $value);
