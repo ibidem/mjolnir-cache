@@ -103,11 +103,22 @@ class SQLStash extends \app\Instantiatable
 		return $this;
 	}
 
+	/**
+	 * @return \app\SQLCache $this
+	 */
 	function set($label, $value)
 	{
 		$this->value_sets[$label] = $value;
 
 		return $this;
+	}
+	
+	/**
+	 * @return \app\SQLCache $this
+	 */
+	function set_date($label, $value)
+	{
+		return $this->set($label, $value);
 	}
 
 	/**
