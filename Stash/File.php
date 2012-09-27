@@ -33,18 +33,25 @@ class Stash_File extends \app\Stash_Base
 		$file = $key;
 		\file_exists($dir) or \mkdir($dir, 0777, true);
 		
-		// store the data
-		\file_put_contents
-			(
-				$dir.$file.static::EXT, 
-				\serialize
-					(
-						[
-							'expires' => \time() + $expires,
-							'data' => $data
-						]
-					)
-			);
+		try
+		{
+			// store the data
+			\file_put_contents
+				(
+					$dir.$file.static::EXT, 
+					\serialize
+						(
+							[
+								'expires' => \time() + $expires,
+								'data' => $data
+							]
+						)
+				);
+		}
+		catch (\Exception $e)
+		{
+			\app\Log::message('ERROR', $e->getMessage());
+		}
 	}
 
 	/**
