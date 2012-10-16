@@ -66,7 +66,7 @@ class Stash extends \app\Instantiatable
 	 */
 	static function tags($model, array $timers = null)
 	{
-		// clean model; remove Model_ prefix is present
+		// clean model; remove Model_ prefix if present
 		$model = \preg_replace
 			(
 				'#^Model_#', '', 
