@@ -8,19 +8,19 @@
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
 class Stash_File extends \app\Stash_Base
-	implements 
-		\mjolnir\types\Stash, 
+	implements
+		\mjolnir\types\Stash,
 		\mjolnir\types\TaggedStash
 {
 	use \app\Trait_TaggedStash;
-	
+
 	const EXT = '.cache'; # extention for cache files
-	
+
 	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
 	static function set($key, $data, $expires = null)
-	{		
+	{
 		$key = static::safe_key($key);
 		$cache = \app\CFS::config('mjolnir/cache')['File'];
 
@@ -28,17 +28,17 @@ class Stash_File extends \app\Stash_Base
 		{
 			$expires = $cache['lifetime.default'];
 		}
-		
+
 		$dir = $cache['cache.dir'];
 		$file = $key;
 		\file_exists($dir) or \mkdir($dir, 0777, true);
-		
+
 		try
 		{
 			// store the data
 			\file_put_contents
 				(
-					$dir.$file.static::EXT, 
+					$dir.$file.static::EXT,
 					\serialize
 						(
 							[
@@ -50,26 +50,26 @@ class Stash_File extends \app\Stash_Base
 		}
 		catch (\Exception $e)
 		{
-			\app\Log::message('ERROR', $e->getMessage());
+			\mjolnir\log_exception($e);
 		}
 	}
 
 	/**
 	 * Retrieves data from $key
-	 * 
+	 *
 	 * @return mixed data or default
 	 */
 	static function get($key, $default = null)
 	{
-		if ( ! \app\CFS::config('mjolnir/base')['caching']) 
+		if ( ! \app\CFS::config('mjolnir/base')['caching'])
 		{
 			return $default;
 		}
-		
+
 		$key = static::safe_key($key);
 		$cache = \app\CFS::config('mjolnir/cache')['File'];
 		$cache_file = $cache['cache.dir'].$key.static::EXT;
-		
+
 		if (\file_exists($cache_file))
 		{
 			$cache_info = \unserialize(\file_get_contents($cache_file));
@@ -97,11 +97,11 @@ class Stash_File extends \app\Stash_Base
 		$key = static::safe_key($key);
 		$cache = \app\CFS::config('mjolnir/cache')['File'];
 		$cache_file = $cache['cache.dir'].$key.static::EXT;
-		
+
 		if (\file_exists($cache_file))
 		{
 			\unlink($cache_file);
 		}
 	}
-	
+
 } # class
