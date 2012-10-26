@@ -7,7 +7,7 @@ use Behat\Behat\Context\ClosuredContextInterface,
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
-\mjolnir\base\Mjolnir::behat();
+\mjolnir\cfs\Mjolnir::behat();
 
 /**
  * Features context.
