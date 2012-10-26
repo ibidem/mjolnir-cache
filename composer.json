@@ -1,8 +1,8 @@
 {
-	"name": "mjolnir/cfs",
-	"version": "1.0.0",
-	"description": "Mjolnir cfs module",
-	"keywords": ["autoloader"],
+	"name": "mjolnir/cache",
+	"version": "0.0",
+	"description": "Mjolnir cache module",
+	"keywords": ["caching"],
 	"homepage": "https://github.com/ibidem",
 	"type": "library",
 	"license": "BSD-2",
@@ -17,7 +17,7 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"mjolnir\\cfs": "../.."
+			"mjolnir\\cache": "../.."
 		}
 	}
 }
