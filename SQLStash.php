@@ -112,7 +112,7 @@ class SQLStash extends \app\Instantiatable
 
 		return $this;
 	}
-	
+
 	/**
 	 * @return \app\SQLCache $this
 	 */
@@ -217,13 +217,13 @@ class SQLStash extends \app\Instantiatable
 	{
 		if (empty($this->identity))
 		{
-			throw new \app\Exception_NotApplicable
+			throw new \app\Exception
 				('Identity not provided for snatch query.');
 		}
 
 		if (empty($this->partial_key))
 		{
-			throw new \app\Exception_NotApplicable
+			throw new \app\Exception
 				('Partial key not provided for snatch query.');
 		}
 
@@ -300,7 +300,7 @@ class SQLStash extends \app\Instantiatable
 		{
 			if (empty($this->table))
 			{
-				throw new \app\Exception_NotApplicable
+				throw new \app\Exception
 					('Table not provided for snatch query.');
 			}
 

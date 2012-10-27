@@ -8,8 +8,8 @@
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
 class Stash_APC extends \app\Stash_Base
-	implements 
-		\mjolnir\types\Stash, 
+	implements
+		\mjolnir\types\Stash,
 		\mjolnir\types\TaggedStash
 {
 	use \app\Trait_TaggedStash;
@@ -18,15 +18,14 @@ class Stash_APC extends \app\Stash_Base
 	 * @var array of scheduled cache entries
 	 */
 	private static $caches = [];
-	
+
 	/**
 	 * @var \app\Stash_APC
 	 */
 	protected static $instance;
-	
+
 	/**
 	 * @return \app\Stash_Memcached
-	 * @throws \app\Exception_NotApplicable
 	 */
 	static function instance()
 	{
@@ -38,15 +37,15 @@ class Stash_APC extends \app\Stash_Base
 		{
 			if ( ! \extension_loaded('apc'))
 			{
-				throw new \app\Exception_NotApplicable('APC extention not loaded.');
+				throw new \app\Exception('APC extention not loaded.');
 			}
-			
+
 			static::$instance = parent::instance();
 
 			return static::$instance;
 		}
 	}
-	
+
 	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
@@ -59,15 +58,15 @@ class Stash_APC extends \app\Stash_Base
 		}
 
 		$key = static::safe_key($key);
-		
+
 		if ( ! \apc_store($key, $data, $expires))
 		{
 			// failed to store data
 			\app\Log::message
 				(
-					'Bug', 
+					'Bug',
 					'APC store failed for key "'.$key.'" and value \''.\serialize($data).'\'. '
-					.'This can be caused by repeated stores with "apc.slam_defense = 1" in your configuration.', 
+					.'This can be caused by repeated stores with "apc.slam_defense = 1" in your configuration.',
 					'bugs'.DIRECTORY_SEPARATOR
 				);
 		}
@@ -75,20 +74,20 @@ class Stash_APC extends \app\Stash_Base
 
 	/**
 	 * Retrieves data from $key
-	 * 
+	 *
 	 * @return mixed data or default
 	 */
 	static function get($key, $default = null)
 	{
-		if ( ! \app\CFS::config('mjolnir/base')['caching']) 
+		if ( ! \app\CFS::config('mjolnir/base')['caching'])
 		{
 			return $default;
 		}
-		
+
 		$key = static::safe_key($key);
-		
+
 		$data = \apc_fetch($key, $success);
-		
+
 		return $success ? \unserialize($data) : $default;
 	}
 
@@ -98,7 +97,7 @@ class Stash_APC extends \app\Stash_Base
 	static function delete($key)
 	{
 		$key = static::safe_key($key);
-		
+
 		\apc_delete($key);
 	}
 
