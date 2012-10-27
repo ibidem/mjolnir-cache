@@ -1,4 +1,4 @@
-@ibidem @caching @ancillary
+@mjolnir @caching @ancillary
 Feature: Simple easy-to-use SQL querie caching
   In order for SQL caching to work.
   As a developer
