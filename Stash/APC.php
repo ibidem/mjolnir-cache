@@ -61,14 +61,13 @@ class Stash_APC extends \app\Stash_Base
 
 		if ( ! \apc_store($key, $data, $expires))
 		{
+			$error_diagnostic 
+				= 'APC store failed for key "'.$key.'" and value \''.\serialize($data).'\'. '
+				.'This can be caused by repeated stores with "apc.slam_defense = 1" in your configuration.'
+				;
+			
 			// failed to store data
-			\app\Log::message
-				(
-					'Bug',
-					'APC store failed for key "'.$key.'" and value \''.\serialize($data).'\'. '
-					.'This can be caused by repeated stores with "apc.slam_defense = 1" in your configuration.',
-					'bugs'.DIRECTORY_SEPARATOR
-				);
+			\mjolnir\quicklog('Bug', $error_diagnostic, 'bugs'.DIRECTORY_SEPARATOR);
 		}
 	}
 
