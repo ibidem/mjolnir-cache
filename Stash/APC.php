@@ -67,7 +67,7 @@ class Stash_APC extends \app\Stash_Base
 				;
 			
 			// failed to store data
-			\mjolnir\quicklog('Bug', $error_diagnostic, 'bugs'.DIRECTORY_SEPARATOR);
+			\mjolnir\log('Bug', $error_diagnostic, 'bugs'.DIRECTORY_SEPARATOR);
 		}
 	}
 
