@@ -100,7 +100,7 @@ class Stash_File extends \app\Stash_Base
 
 		if (\file_exists($cache_file))
 		{
-			\unlink($cache_file);
+			@\unlink($cache_file);
 		}
 	}
 
