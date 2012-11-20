@@ -259,6 +259,10 @@ class SQLStash extends \app\Instantiatable
 						{
 							return $k.' IS NULL';
 						}
+						else if (\app\SQL::is_expression($value))
+						{
+							return $k.' = '.$value;
+						}
 						else # string, or string compatible
 						{
 							return $k.' = '.\app\SQL::quote($value);
