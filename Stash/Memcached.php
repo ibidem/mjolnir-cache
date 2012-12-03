@@ -56,10 +56,10 @@ class Stash_Memcached extends \app\Stash_Base
 			$servers = $memcache->getServerList();
 			if (empty($servers))
 			{
-				$memcache->setOption(\Memcache::OPT_RECV_TIMEOUT, $memcache_config['timeout.recv']);
-			    $memcache->setOption(\Memcache::OPT_SEND_TIMEOUT, $memcache_config['timeout.send']);
-				$memcache->setOption(\Memcache::OPT_TCP_NODELAY, $memcache_config['tcp.nodelay']);
-				$memcache->setOption(\Memcache::OPT_PREFIX_KEY, $memcache_config['prefix']);
+				$memcache->setOption(\Memcached::OPT_RECV_TIMEOUT, $memcache_config['timeout.recv']);
+			    $memcache->setOption(\Memcached::OPT_SEND_TIMEOUT, $memcache_config['timeout.send']);
+				$memcache->setOption(\Memcached::OPT_TCP_NODELAY, $memcache_config['tcp.nodelay']);
+				$memcache->setOption(\Memcached::OPT_PREFIX_KEY, $memcache_config['prefix']);
 
 				foreach ($memcache_config['servers'] as $server)
 				{
@@ -101,7 +101,7 @@ class Stash_Memcached extends \app\Stash_Base
 		$key = static::safe_key($key);
 		$memcache = static::instance()->memcached;
 		$result = \unserialize($memcache->get($key));
-		if (\Memcache::RES_SUCCESS === $memcache->getResultCode())
+		if (\Memcached::RES_SUCCESS === $memcache->getResultCode())
 		{
 			return $result;
 		}
