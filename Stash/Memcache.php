@@ -44,7 +44,7 @@ class Stash_Memcache extends \app\Stash_Base implements \mjolnir\types\Cache
 	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
-	static function set($key, $data, $expires = null)
+	function set($key, $data, $expires = null)
 	{
 		$key = static::safe_key($key);
 		$config = \app\CFS::config('mjolnir/cache')['Memcache'];
@@ -61,7 +61,7 @@ class Stash_Memcache extends \app\Stash_Base implements \mjolnir\types\Cache
 	 *
 	 * @return mixed data or default
 	 */
-	static function get($key, $default = null)
+	function get($key, $default = null)
 	{
 		$key = static::safe_key($key);
 		$value = $this->memcache->get($key);
@@ -79,7 +79,7 @@ class Stash_Memcache extends \app\Stash_Base implements \mjolnir\types\Cache
 	/**
 	 * Deletes $key
 	 */
-	static function delete($key)
+	function delete($key)
 	{
 		$key = static::safe_key($key);
 		$this->memcache->delete($key);
@@ -88,7 +88,7 @@ class Stash_Memcache extends \app\Stash_Base implements \mjolnir\types\Cache
 	/**
 	 * Wipe cache.
 	 */
-	static function flush()
+	function flush()
 	{
 		$this->memcache->flush();
 	}

@@ -24,6 +24,7 @@ class Stash_File extends \app\Stash_Base implements \mjolnir\types\Cache
 		}
 		
 		$cache_dir = \app\CFS::config('mjolnir/cache')['File']['cache.dir'];
+		
 		if (\file_exists($cache_dir))
 		{
 			\app\Filesystem::makedir($cache_dir);
