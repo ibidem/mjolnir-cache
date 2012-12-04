@@ -53,6 +53,15 @@ class Stash
 	}
 	
 	/**
+	 * Wipe cache.
+	 */
+	static function flush()
+	{
+		static::$instance or static::init();
+		static::$instance->flush();
+	}
+	
+	/**
 	 * Stores data in $key, tagged with tags.
 	 */
 	static function store($key, $data, array $tags = [], $expires = null)
@@ -69,7 +78,7 @@ class Stash
 		static::$instance or static::init();
 		static::$instance->purge($tags);
 	}
-
+	
 	/**
 	 * When timers is not provided the timers are retrieved automatically from 
 	 * the model. (timers act as invalidators for the stash)
