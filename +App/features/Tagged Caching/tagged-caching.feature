@@ -18,3 +18,5 @@ Feature: Basic Caching
 	| file      | 0   |
 	| memcache  | xyz |
 	| memcache  | 0   |
+	| memcached | xyz |
+	| memcached | 0   |

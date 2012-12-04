@@ -19,6 +19,10 @@ Feature: Basic Caching
 	| memcache  | 1     | 1           |
 	| memcache  | 0     | 666         |
 	| memcache  | xyz   | abc cde fgh |
+	| memcached | a b c | a_key       |
+	| memcached | 1     | 1           |
+	| memcached | 0     | 666         |
+	| memcached | xyz   | abc cde fgh |
 
   Scenario Outline: Basic deleting.
      Given a cache driver "<driver>"
@@ -34,6 +38,9 @@ Feature: Basic Caching
 	| memcache  | a b c | a_key       |
 	| memcache  | 0     | 666         |
 	| memcache  | xyz   | abc cde fgh |
+	| memcached | a b c | a_key       |
+	| memcached | 0     | 666         |
+	| memcached | xyz   | abc cde fgh |
 
   Scenario Outline: Updating a previously set entry.
      Given a cache driver "<driver>"
@@ -52,10 +59,13 @@ Feature: Basic Caching
 	Then I should get the same array back when I ask for the cache "some_key"
 
   Scenarios:
-	| driver   | array                  |
-	| file     | 0 => 1, 1 => 3, 2 => 2 |
-	| file     | 0 => a, 1 => b, 2 => c |
-	| file     | 0 => d                 |
-	| memcache | 0 => 1, 1 => 3, 2 => 2 |
-	| memcache | 0 => a, 1 => b, 2 => c |
-	| memcache | 0 => d                 |
+	| driver    | array                  |
+	| file      | 0 => 1, 1 => 3, 2 => 2 |
+	| file      | 0 => a, 1 => b, 2 => c |
+	| file      | 0 => d                 |
+	| memcache  | 0 => 1, 1 => 3, 2 => 2 |
+	| memcache  | 0 => a, 1 => b, 2 => c |
+	| memcache  | 0 => d                 |
+	| memcached | 0 => 1, 1 => 3, 2 => 2 |
+	| memcached | 0 => a, 1 => b, 2 => c |
+	| memcached | 0 => d                 |
