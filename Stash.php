@@ -15,7 +15,7 @@ class Stash
 	static protected $instance = null;
 	
 	/**
-	 * 
+	 * ...
 	 */
 	static function init()
 	{
