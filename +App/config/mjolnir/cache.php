@@ -37,14 +37,16 @@
 				'port' => 11211,
 			),
 	
-		'APC' => array
-			(
-				'lifetime.default' => 3600,
-			),
-	
 		'File' => array
 			(
-				'cache.dir' => APPPATH.'cache'.DIRECTORY_SEPARATOR,
+				'cache.dir' => APPPATH.'cache'.DIRECTORY_SEPARATOR.'file.cache'.DIRECTORY_SEPARATOR,
 				'lifetime.default' => 3600,
+			
+				// truecking indicates if failure to remove a cache file 
+				// (typically caused by faulty permissions) should NOT halt the
+				// system operations; checks will still be made but no 
+				// exceptions are thrown. Set this to false if integrity is very
+				// important
+				'trucking' => true,
 			),
 	);

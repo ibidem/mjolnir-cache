@@ -7,83 +7,77 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Stash_Memcached extends \app\Stash_Base
-	implements
-		\mjolnir\types\Stash,
-		\mjolnir\types\TaggedStash
+class Stash_Memcached extends \app\Stash_Base implements \mjolnir\types\Cache
 {
 	use \app\Trait_TaggedStash;
 
 	/**
-	 * @var \app\Stash_Memecached
-	 */
-	private static $instance;
-
-	/**
 	 * @var \Memcache
 	 */
-	private $memcached;
+	protected $memcached;
 
 	/**
-	 * @return \app\Stash_Memcached
+	 * @return \mjolnir\types\Cache
 	 */
 	static function instance()
 	{
-		if (self::$instance)
+		if ( ! \app\CFS::config('mjolnir/base')['caching'])
 		{
-			return self::$instance;
+			return \app\Stash_Null::instance();
 		}
-		else # uninitialized
+
+		if ( ! \class_exists('Memcached'))
 		{
-			if ( ! \class_exists('Memcached'))
-			{
-				throw new \app\Exception('memcached extention not loaded.');
-			}
-
-			self::$instance = parent::instance();
-
-			$memcache_config = \app\CFS::config('mjolnir/cache')['Memcached'];
-
-			if ($memcache_config['persistent_id'])
-			{
-				$memcache = self::$instance->memcached = new \Memcached($memcache_config['persistent_id']);
-			}
-			else
-			{
-				$memcache = self::$instance->memcached = new \Memcached;
-			}
-
-			$servers = $memcache->getServerList();
-			if (empty($servers))
-			{
-				$memcache->setOption(\Memcache::OPT_RECV_TIMEOUT, $memcache_config['timeout.recv']);
-			    $memcache->setOption(\Memcache::OPT_SEND_TIMEOUT, $memcache_config['timeout.send']);
-				$memcache->setOption(\Memcache::OPT_TCP_NODELAY, $memcache_config['tcp.nodelay']);
-				$memcache->setOption(\Memcache::OPT_PREFIX_KEY, $memcache_config['prefix']);
-
-				foreach ($memcache_config['servers'] as $server)
-				{
-					$memcache->addServer($server['host'], $server['port'], $server['weight']);
-				}
-			}
-
-			return self::$instance;
+			throw new \app\Exception('memcached extention not loaded.');
 		}
+
+		$instance = parent::instance();
+
+		$memcache_config = \app\CFS::config('mjolnir/cache')['Memcached'];
+
+		if ($memcache_config['persistent_id'])
+		{
+			$memcache = $instance->memcached = new \Memcached($memcache_config['persistent_id']);
+		}
+		else # no persistent id
+		{
+			$memcache = $instance->memcached = new \Memcached;
+		}
+
+		$servers = $memcache->getServerList();
+		if (empty($servers))
+		{
+			$memcache->setOption(\Memcached::OPT_RECV_TIMEOUT, $memcache_config['timeout.recv']);
+			$memcache->setOption(\Memcached::OPT_SEND_TIMEOUT, $memcache_config['timeout.send']);
+			$memcache->setOption(\Memcached::OPT_TCP_NODELAY, $memcache_config['tcp.nodelay']);
+			$memcache->setOption(\Memcached::OPT_PREFIX_KEY, $memcache_config['prefix']);
+
+			foreach ($memcache_config['servers'] as $server)
+			{
+				$memcache->addServer($server['host'], $server['port'], $server['weight']);
+			}
+		}
+
+		return $instance;
 	}
 
 	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
-	static function set($key, $data, $expires = null)
+	function set($key, $data, $expires = null)
 	{
-		$key = static::safe_key($key);
-		$config = \app\CFS::config('mjolnir/cache')['Memcached'];
 		if ($expires === null)
 		{
+			$config = \app\CFS::config('mjolnir/cache')['Memcached'];
 			$expires = $config['lifetime.default'];
 		}
 
-		static::instance()->memcached->set($key, \serialize($data), $expires);
+		static::instance()->memcached->set
+			(
+				static::safe_key($key), 
+				\serialize($data), 
+				$expires
+			);
 	}
 
 	/**
@@ -91,17 +85,10 @@ class Stash_Memcached extends \app\Stash_Base
 	 *
 	 * @return mixed data or default
 	 */
-	static function get($key, $default = null)
+	function get($key, $default = null)
 	{
-		if ( ! \app\CFS::config('mjolnir/base')['caching'])
-		{
-			return $default;
-		}
-
-		$key = static::safe_key($key);
-		$memcache = static::instance()->memcached;
-		$result = \unserialize($memcache->get($key));
-		if (\Memcache::RES_SUCCESS === $memcache->getResultCode())
+		$result = \unserialize($this->memcached->get(static::safe_key($key)));
+		if (\Memcached::RES_SUCCESS === $this->memcached->getResultCode())
 		{
 			return $result;
 		}
@@ -114,10 +101,17 @@ class Stash_Memcached extends \app\Stash_Base
 	/**
 	 * Deletes $key
 	 */
-	static function delete($key)
+	function delete($key)
 	{
-		$key = static::safe_key($key);
-		static::instance()->memcached->delete($key, 0);
+		$this->memcached->delete(static::safe_key($key), 0);
 	}
 
+	/**
+	 * Wipe cache.
+	 */
+	function flush()
+	{
+		$this->memcached->flush();
+	}
+	
 } # class
