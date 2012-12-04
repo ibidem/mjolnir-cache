@@ -14,7 +14,7 @@ trait Trait_TaggedStash
 	/**
 	 * Tags the data key for reference.
 	 */
-	static function store($key, $data, array $tags = [], $expires = null)
+	function store($key, $data, array $tags = [], $expires = null)
 	{
 		$tag_stash = static::get(static::$tag_stash_key);
 		isset($tag_stash) or $tag_stash = [];
@@ -40,7 +40,7 @@ trait Trait_TaggedStash
 	/**
 	 * Removes cache entries tagged with specified tags.
 	 */
-	static function purge(array $tags)
+	function purge(array $tags)
 	{
 		$tag_stash = static::get(static::$tag_stash_key);
 		
@@ -70,7 +70,7 @@ trait Trait_TaggedStash
 	 * 
 	 * @return array tags for given parameters
 	 */
-	static function tags($model, array $timers = null)
+	function tags($model, array $timers = null)
 	{
 		return \app\Stash::tags($model, $timers);
 	}

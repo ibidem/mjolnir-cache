@@ -7,15 +7,29 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Stash extends \app\Instantiatable
+class Stash
 {
+	/**
+	 * @var \mjolnir\types\Cache
+	 */
+	static protected $instance = null;
+	
+	/**
+	 * 
+	 */
+	static function init()
+	{
+		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
+		static::$instance = $class::instance();
+	}
+	
 	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
 	static function set($key, $data, $expires = null)
 	{
-		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
-		$class::set($key, $data, $expires);
+		static::$instance or static::init();
+		static::$instance->set($key, $data, $expires);
 	}
 
 	/**
@@ -25,8 +39,8 @@ class Stash extends \app\Instantiatable
 	 */
 	static function get($key, $default = null)
 	{
-		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
-		return $class::get($key, $default);
+		static::$instance or static::init();
+		return static::$instance->get($key, $default);
 	}
 
 	/**
@@ -34,8 +48,8 @@ class Stash extends \app\Instantiatable
 	 */
 	static function delete($key)
 	{
-		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
-		$class::delete($key);
+		static::$instance or static::init();
+		static::$instance->delete($key);
 	}
 	
 	/**
@@ -43,8 +57,8 @@ class Stash extends \app\Instantiatable
 	 */
 	static function store($key, $data, array $tags = [], $expires = null)
 	{
-		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
-		$class::store($key, $data, $tags, $expires);
+		static::$instance or static::init();
+		static::$instance->store($key, $data, $tags, $expires);
 	}
 
 	/**
@@ -52,8 +66,8 @@ class Stash extends \app\Instantiatable
 	 */
 	static function purge(array $tags)
 	{
-		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
-		$class::purge($tags);
+		static::$instance or static::init();
+		static::$instance->purge($tags);
 	}
 
 	/**

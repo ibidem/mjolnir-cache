@@ -7,17 +7,9 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Stash_Memcache extends \app\Stash_Base
-	implements
-		\mjolnir\types\Stash,
-		\mjolnir\types\TaggedStash
+class Stash_Memcache extends \app\Stash_Base implements \mjolnir\types\Cache
 {
 	use \app\Trait_TaggedStash;
-
-	/**
-	 * @var \app\Stash_Memecached
-	 */
-	private static $instance;
 
 	/**
 	 * @var \Memcache
@@ -25,30 +17,28 @@ class Stash_Memcache extends \app\Stash_Base
 	private $memcache;
 
 	/**
-	 * @return \app\Stash_Memcached
+	 * @return \mjolnir\types\Cache
 	 */
-	static function instance()
+	function instance()
 	{
-		if (self::$instance)
+		if ( ! \app\CFS::config('mjolnir/base')['caching'])
 		{
-			return self::$instance;
+			return \app\Stash_Null::instance();
 		}
-		else # uninitialized
+
+		if ( ! \class_exists('Memcache'))
 		{
-			if ( ! \class_exists('Memcache'))
-			{
-				throw new \app\Exception('memcache extention not loaded.');
-			}
-
-			self::$instance = parent::instance();
-
-			$memcache_config = \app\CFS::config('mjolnir/cache')['Memcache'];
-
-			self::$instance->memcache = new \Memcache;
-			self::$instance->memcache->connect($memcache_config['host'], $memcache_config['port']);
-
-			return self::$instance;
+			throw new \app\Exception('memcache extention not loaded.');
 		}
+
+		$instance = parent::instance();
+
+		$memcache_config = \app\CFS::config('mjolnir/cache')['Memcache'];
+
+		$instance->memcache = new \Memcache;
+		$instance->memcache->connect($memcache_config['host'], $memcache_config['port']);
+
+		return $instance;
 	}
 
 	/**
@@ -63,7 +53,7 @@ class Stash_Memcache extends \app\Stash_Base
 			$expires = $config['lifetime.default'];
 		}
 
-		static::instance()->memcache->set($key, \serialize($data), MEMCACHE_COMPRESSED, $expires);
+		$this->memcache->set($key, \serialize($data), MEMCACHE_COMPRESSED, $expires);
 	}
 
 	/**
@@ -73,13 +63,8 @@ class Stash_Memcache extends \app\Stash_Base
 	 */
 	static function get($key, $default = null)
 	{
-		if ( ! \app\CFS::config('mjolnir/base')['caching'])
-		{
-			return $default;
-		}
-
 		$key = static::safe_key($key);
-		$value = static::instance()->memcache->get($key);
+		$value = $this->memcache->get($key);
 
 		if ($value !== false)
 		{
@@ -97,7 +82,15 @@ class Stash_Memcache extends \app\Stash_Base
 	static function delete($key)
 	{
 		$key = static::safe_key($key);
-		static::instance()->memcache->delete($key);
+		$this->memcache->delete($key);
+	}
+	
+	/**
+	 * Wipe cache.
+	 */
+	static function flush()
+	{
+		$this->memcache->flush();
 	}
 
 } # class

@@ -7,10 +7,7 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Stash_File extends \app\Stash_Base
-	implements
-		\mjolnir\types\Stash,
-		\mjolnir\types\TaggedStash
+class Stash_File extends \app\Stash_Base implements \mjolnir\types\Cache
 {
 	use \app\Trait_TaggedStash;
 
@@ -19,7 +16,7 @@ class Stash_File extends \app\Stash_Base
 	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
-	static function set($key, $data, $expires = null)
+	function set($key, $data, $expires = null)
 	{
 		$key = static::safe_key($key);
 		$cache = \app\CFS::config('mjolnir/cache')['File'];
@@ -31,14 +28,12 @@ class Stash_File extends \app\Stash_Base
 
 		$dir = $cache['cache.dir'];
 		$file = $key;
-		\file_exists($dir) or \mkdir($dir, 0777, true);
 
 		try
 		{
-			// store the data
-			\file_put_contents
+			\app\Filesystem::puts
 				(
-					$dir.$file.static::EXT,
+					$dir.$file.static::EXT, 
 					\serialize
 						(
 							[
@@ -59,16 +54,10 @@ class Stash_File extends \app\Stash_Base
 	 *
 	 * @return mixed data or default
 	 */
-	static function get($key, $default = null)
+	function get($key, $default = null)
 	{
-		if ( ! \app\CFS::config('mjolnir/base')['caching'])
-		{
-			return $default;
-		}
-
 		$key = static::safe_key($key);
-		$cache = \app\CFS::config('mjolnir/cache')['File'];
-		$cache_file = $cache['cache.dir'].$key.static::EXT;
+		$cache_file = \app\CFS::config('mjolnir/cache')['File']['cache.dir'].$key.static::EXT;
 
 		if (\file_exists($cache_file))
 		{
@@ -79,7 +68,7 @@ class Stash_File extends \app\Stash_Base
 			}
 			else # cache expired
 			{
-				static::delete($key);
+				$this->delete($key);
 				return $default;
 			}
 		}
@@ -92,16 +81,56 @@ class Stash_File extends \app\Stash_Base
 	/**
 	 * Deletes $key
 	 */
-	static function delete($key)
+	function delete($key)
 	{
-		$key = static::safe_key($key);
 		$cache = \app\CFS::config('mjolnir/cache')['File'];
-		$cache_file = $cache['cache.dir'].$key.static::EXT;
+		$cache_file = $cache['cache.dir'].static::safe_key($key).static::EXT;
 
 		if (\file_exists($cache_file))
 		{
-			@\unlink($cache_file);
+			if ($cache['trucking'])
+			{
+				@\unlink($cache_file);
+				
+				if (\file_exists($cache_file))
+				{
+					// try adjusting permissions
+					\chmod($cache_file, 0700);
+					@\unlink($cache_file);
+					
+					if (\file_exists($cache_file))
+					{
+						\mjolnir\log('Bug', 'Failed to delete '.$cache_file, 'Bugs');
+					}
+					else # we failed initially, but managed to eventually
+					{
+						\mjolnir\log('Bug', 'Bad permissions on cache file ['.$cache_file.']; has been mitigated via permission auto-adjust. Potential configuration mistake.', 'Bugs');
+					}
+				}
+			}
+			else # no trucking; accept system failures
+			{
+				@\unlink($cache_file);
+				
+				if (\file_exists($cache_file))
+				{
+					// try adjusting permissions
+					\chmod($cache_file, 0700);
+					\unlink($cache_file); # intentionally ommited @
+				}
+			}
 		}
+	}
+	
+	/**
+	 * Wipes cache.
+	 */
+	function flush()
+	{
+		\app\Filesystem::purge
+			(
+				\app\CFS::config('mjolnir/cache')['File']['cache.dir']
+			);
 	}
 
 } # class

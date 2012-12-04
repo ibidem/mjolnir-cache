@@ -7,54 +7,36 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Stash_APC extends \app\Stash_Base
-	implements
-		\mjolnir\types\Stash,
-		\mjolnir\types\TaggedStash
+class Stash_APC extends \app\Stash_Base implements \mjolnir\types\Cache
 {
 	use \app\Trait_TaggedStash;
 
 	/**
-	 * @var array of scheduled cache entries
-	 */
-	private static $caches = [];
-
-	/**
-	 * @var \app\Stash_APC
-	 */
-	protected static $instance;
-
-	/**
-	 * @return \app\Stash_Memcached
+	 * @return \mjolnir\types\Stash
 	 */
 	static function instance()
 	{
-		if (static::$instance)
+		if ( ! \app\CFS::config('mjolnir/base')['caching'])
 		{
-			return static::$instance;
+			return \app\Stash_Null::instance();
 		}
-		else # uninitialized
+
+		if ( ! \extension_loaded('apc'))
 		{
-			if ( ! \extension_loaded('apc'))
-			{
-				throw new \app\Exception('APC extention not loaded.');
-			}
-
-			static::$instance = parent::instance();
-
-			return static::$instance;
+			throw new \app\Exception('APC extention not loaded.');
 		}
+
+		return parent::instance();	
 	}
 
 	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
-	static function set($key, $data, $expires = null)
+	function set($key, $data, $expires = null)
 	{
-		$cache = \app\CFS::config('mjolnir/cache')['APC'];
 		if ($expires === null)
 		{
-			$expires = $cache['lifetime.default'];
+			$expires = \app\CFS::config('mjolnir/cache')['APC']['lifetime.default'];
 		}
 
 		$key = static::safe_key($key);
@@ -76,13 +58,8 @@ class Stash_APC extends \app\Stash_Base
 	 *
 	 * @return mixed data or default
 	 */
-	static function get($key, $default = null)
+	function get($key, $default = null)
 	{
-		if ( ! \app\CFS::config('mjolnir/base')['caching'])
-		{
-			return $default;
-		}
-
 		$key = static::safe_key($key);
 
 		$data = \apc_fetch($key, $success);
@@ -93,11 +70,21 @@ class Stash_APC extends \app\Stash_Base
 	/**
 	 * Deletes $key
 	 */
-	static function delete($key)
+	function delete($key)
 	{
 		$key = static::safe_key($key);
 
 		\apc_delete($key);
+	}
+	
+	/**
+	 * Wipes the cache.
+	 */
+	function flush()
+	{
+		\apc_clear_cache();
+		\apc_clear_cache('user');
+		\apc_clear_cache('opcode');
 	}
 
 } # class
