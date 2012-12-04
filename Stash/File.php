@@ -14,6 +14,25 @@ class Stash_File extends \app\Stash_Base implements \mjolnir\types\Cache
 	const EXT = '.cache'; # extention for cache files
 
 	/**
+	 * @return \mjolnir\types\Cache
+	 */
+	static function instance()
+	{
+		if ( ! \app\CFS::config('mjolnir/base')['caching'])
+		{
+			return \app\Stash_Null::instance();
+		}
+		
+		$cache_dir = \app\CFS::config('mjolnir/cache')['File']['cache.dir'];
+		if (\file_exists($cache_dir))
+		{
+			\app\Filesystem::makedir($cache_dir);
+		}
+
+		return parent::instance();
+	}
+	
+	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
 	function set($key, $data, $expires = null)

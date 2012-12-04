@@ -10,20 +10,7 @@
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
 class Stash_Base extends \app\Instantiatable
-{
-	/**
-	 * @return \mjolnir\types\Cache
-	 */
-	static function instance()
-	{
-		if ( ! \app\CFS::config('mjolnir/base')['caching'])
-		{
-			return \app\Stash_Null::instance();
-		}
-
-		return parent::instance();
-	}
-	
+{	
 	/**
 	 * Given a key, removes all special characters.
 	 * 

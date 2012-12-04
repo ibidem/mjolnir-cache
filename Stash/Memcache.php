@@ -19,7 +19,7 @@ class Stash_Memcache extends \app\Stash_Base implements \mjolnir\types\Cache
 	/**
 	 * @return \mjolnir\types\Cache
 	 */
-	function instance()
+	static function instance()
 	{
 		if ( ! \app\CFS::config('mjolnir/base')['caching'])
 		{
