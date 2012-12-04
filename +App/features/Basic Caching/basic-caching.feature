@@ -78,6 +78,3 @@ Feature: Basic Caching
 	| memcached | 0 => 1, 1 => 3, 2 => 2 |
 	| memcached | 0 => a, 1 => b, 2 => c |
 	| memcached | 0 => d                 |
-	| APC       | 0 => 1, 1 => 3, 2 => 2 |
-	| APC       | 0 => a, 1 => b, 2 => c |
-	| APC       | 0 => d                 |

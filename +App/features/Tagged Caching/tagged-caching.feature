@@ -20,5 +20,3 @@ Feature: Basic Caching
 	| memcache  | 0   |
 	| memcached | xyz |
 	| memcached | 0   |
-	| APC       | xyz |
-	| APC       | 0   |

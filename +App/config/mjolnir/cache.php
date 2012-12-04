@@ -37,11 +37,6 @@
 				'port' => 11211,
 			),
 	
-		'APC' => array
-			(
-				'lifetime.default' => 3600,
-			),
-	
 		'File' => array
 			(
 				'cache.dir' => APPPATH.'cache'.DIRECTORY_SEPARATOR.'file.cache'.DIRECTORY_SEPARATOR,
