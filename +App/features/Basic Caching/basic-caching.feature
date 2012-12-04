@@ -23,10 +23,6 @@ Feature: Basic Caching
 	| memcached | 1     | 1           |
 	| memcached | 0     | 666         |
 	| memcached | xyz   | abc cde fgh |
-	| APC       | a b c | a_key       |
-	| APC       | 1     | 1           |
-	| APC       | 0     | 666         |
-	| APC       | xyz   | abc cde fgh |
 
   Scenario Outline: Basic deleting.
      Given a cache driver "<driver>"
@@ -45,9 +41,6 @@ Feature: Basic Caching
 	| memcached | a b c | a_key       |
 	| memcached | 0     | 666         |
 	| memcached | xyz   | abc cde fgh |
-	| APC       | a b c | a_key       |
-	| APC       | 0     | 666         |
-	| APC       | xyz   | abc cde fgh |
 
   Scenario Outline: Updating a previously set entry.
      Given a cache driver "<driver>"
@@ -60,7 +53,6 @@ Feature: Basic Caching
 	| file      | abc       | xyz       | a_key |
 	| memcache  | abc       | xyz       | a_key |
 	| memcached | abc       | xyz       | a_key |
-	| APC       | abc       | xyz       | a_key |
 
   Scenario Outline: Storing and retrieving arrays
 	Given a cache driver "<driver>"
