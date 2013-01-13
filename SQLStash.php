@@ -238,7 +238,7 @@ class SQLStash extends \app\Instantiatable
 		if ( ! empty($this->constraints))
 		{
 			$constraints = ' WHERE ';
-			$constraints .= \app\Collection::implode
+			$constraints .= \app\Arr::implode
 				(
 					' AND ', # delimiter
 					$this->constraints, # source
@@ -280,7 +280,7 @@ class SQLStash extends \app\Instantiatable
 		if ( ! empty($this->order))
 		{
 			$order = ' ORDER BY ';
-			$order .= \app\Collection::implode(', ', $this->order, function ($query, $order) {
+			$order .= \app\Arr::implode(', ', $this->order, function ($query, $order) {
 				return \strpbrk($query, ' .') === false ? '`'.$query.'` '.$order : $query.' '.$order;
 			});
 
