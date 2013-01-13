@@ -7,10 +7,13 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Stash_File extends \app\Stash_Base implements \mjolnir\types\Cache
+class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 {
-	use \app\Trait_TaggedStash;
+	use \app\Trait_Cache;
 
+	/**
+	 * @var string
+	 */
 	const EXT = '.cache'; # extention for cache files
 
 	/**
@@ -22,9 +25,9 @@ class Stash_File extends \app\Stash_Base implements \mjolnir\types\Cache
 		{
 			return \app\Stash_Null::instance();
 		}
-		
+
 		$cache_dir = \app\CFS::config('mjolnir/cache')['File']['cache.dir'];
-		
+
 		if (\file_exists($cache_dir))
 		{
 			\app\Filesystem::makedir($cache_dir);
@@ -32,7 +35,7 @@ class Stash_File extends \app\Stash_Base implements \mjolnir\types\Cache
 
 		return parent::instance();
 	}
-	
+
 	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
@@ -53,7 +56,7 @@ class Stash_File extends \app\Stash_Base implements \mjolnir\types\Cache
 		{
 			\app\Filesystem::puts
 				(
-					$dir.$file.static::EXT, 
+					$dir.$file.static::EXT,
 					\serialize
 						(
 							[
@@ -111,13 +114,13 @@ class Stash_File extends \app\Stash_Base implements \mjolnir\types\Cache
 			if ($cache['trucking'])
 			{
 				@\unlink($cache_file);
-				
+
 				if (\file_exists($cache_file))
 				{
 					// try adjusting permissions
 					\chmod($cache_file, 0700);
 					@\unlink($cache_file);
-					
+
 					if (\file_exists($cache_file))
 					{
 						\mjolnir\log('Bug', 'Failed to delete '.$cache_file, 'Bugs');
@@ -131,7 +134,7 @@ class Stash_File extends \app\Stash_Base implements \mjolnir\types\Cache
 			else # no trucking; accept system failures
 			{
 				@\unlink($cache_file);
-				
+
 				if (\file_exists($cache_file))
 				{
 					// try adjusting permissions
@@ -141,7 +144,7 @@ class Stash_File extends \app\Stash_Base implements \mjolnir\types\Cache
 			}
 		}
 	}
-	
+
 	/**
 	 * Wipes cache.
 	 */

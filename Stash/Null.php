@@ -1,19 +1,19 @@
 <?php namespace mjolnir\cache;
 
 /**
- * The purpose of the Null instance is to handle caching operations when 
- * caching is disabled. As it's name implied, nothing will happen, 
+ * The purpose of the Null instance is to handle caching operations when
+ * caching is disabled. As it's name implied, nothing will happen,
  * regardless of operation.
- * 
+ *
  * @package    mjolnir
  * @category   Stash
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Stash_Null extends \app\Stash_Base implements \mjolnir\types\Cache	
+class Stash_Null extends \app\Instantiatable implements \mjolnir\types\Cache
 {
-	use \app\Trait_TaggedStash;
+	use \app\Trait_Cache;
 
 	/**
 	 * Store a value under a key for a certain number of seconds.
@@ -22,7 +22,7 @@ class Stash_Null extends \app\Stash_Base implements \mjolnir\types\Cache
 	{
 		// do nothing
 	}
-	
+
 	/**
 	 * Retrieves data from $key
 	 *
@@ -32,7 +32,7 @@ class Stash_Null extends \app\Stash_Base implements \mjolnir\types\Cache
 	{
 		return $default;
 	}
-	
+
 	/**
 	 * Deletes $key
 	 */
@@ -40,7 +40,7 @@ class Stash_Null extends \app\Stash_Base implements \mjolnir\types\Cache
 	{
 		// do nothing
 	}
-	
+
 	/**
 	 * Wipe cache.
 	 */
@@ -48,7 +48,7 @@ class Stash_Null extends \app\Stash_Base implements \mjolnir\types\Cache
 	{
 		// do nothing
 	}
-	
+
 	/**
 	 * Tags the data key for reference.
 	 */
@@ -56,7 +56,7 @@ class Stash_Null extends \app\Stash_Base implements \mjolnir\types\Cache
 	{
 		// do nothing
 	}
-	
+
 	/**
 	 * Removes cache entries tagged with specified tags.
 	 */
@@ -64,7 +64,7 @@ class Stash_Null extends \app\Stash_Base implements \mjolnir\types\Cache
 	{
 		// do nothing
 	}
-	
+
 	/**
 	 * @return array tags
 	 */

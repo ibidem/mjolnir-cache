@@ -7,9 +7,9 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Stash_Memcache extends \app\Stash_Base implements \mjolnir\types\Cache
+class Stash_Memcache extends \app\Instantiatable implements \mjolnir\types\Cache
 {
-	use \app\Trait_TaggedStash;
+	use \app\Trait_Cache;
 
 	/**
 	 * @var \Memcache
@@ -84,7 +84,7 @@ class Stash_Memcache extends \app\Stash_Base implements \mjolnir\types\Cache
 		$key = static::safe_key($key);
 		$this->memcache->delete($key);
 	}
-	
+
 	/**
 	 * Wipe cache.
 	 */

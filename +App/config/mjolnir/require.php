@@ -1,7 +1,5 @@
 <?php namespace mjolnir\theme;
 
-use \mjolnir\types\Enum_Requirement as Requirement;
-
 return array
 	(
 		'mjolnir\stash' => array
@@ -10,20 +8,20 @@ return array
 					{
 						if (\extension_loaded('APC'))
 						{
-							return Requirement::available;
+							return 'available';
 						}
-						
-						return Requirement::failed;
+
+						return 'failed';
 					},
-				
+
 				'extension=php_memcache' => function ()
 					{
 						if(\class_exists('Memcache'))
 						{
-							return Requirement::available;
+							return 'available';
 						}
-						
-						return Requirement::failed;
+
+						return 'failed';
 					}
 			),
 	);

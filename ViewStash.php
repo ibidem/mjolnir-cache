@@ -7,16 +7,22 @@
  * @copyright  (c) 2012 Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class ViewStash 
-	implements \mjolnir\types\ViewStash
+class ViewStash implements \mjolnir\types\ViewStash
 {
-	protected static $stash_keys = [];
+	use \app\Trait_ViewStash;
+
+	/**
+	 * @var array
+	 */
+	protected static $stash_keys = null;
 
 	/**
 	 * @return bool
  	 */
-	static function load($key, array $tags = [])
+	static function load($key, array $tags = null)
 	{
+		$tags !== null or $tags = [];
+
 		$stash_key = '_ViewStash_'.\app\Lang::get_lang().'__'.$key;
 		$view = \app\Stash::get($stash_key, null);
 
@@ -36,6 +42,9 @@ class ViewStash
 		}
 	}
 
+	/**
+	 * ...
+	 */
 	static function save()
 	{
 		$definition = \array_pop(static::$stash_keys);
