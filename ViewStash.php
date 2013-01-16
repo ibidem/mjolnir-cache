@@ -23,7 +23,7 @@ class ViewStash implements \mjolnir\types\ViewStash
 	{
 		$tags !== null or $tags = [];
 
-		$stash_key = '_ViewStash_'.\app\Lang::get_lang().'__'.$key;
+		$stash_key = '_ViewStash_'.\app\Lang::targetlang().'__'.$key;
 		$view = \app\Stash::get($stash_key, null);
 
 		if ($view !== null)
