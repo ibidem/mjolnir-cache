@@ -202,7 +202,7 @@ class SQLStash extends \app\Instantiatable
 
 		static::process_statement($statement);
 
-		$statement->execute();
+		$statement->run();
 
 		// invalidte tags
 		\app\Stash::purge($this->tags);
@@ -313,7 +313,7 @@ class SQLStash extends \app\Instantiatable
 
 			static::process_statement($statement);
 
-			$result = $statement->execute()->fetch_all($format);
+			$result = $statement->run()->fetch_all($format);
 
 			\app\Stash::store($cachekey, $result, $this->tags);
 		}
@@ -362,12 +362,12 @@ class SQLStash extends \app\Instantiatable
 
 		foreach ($this->int_sets as $label => $value)
 		{
-			$statement->set_int($label, $value);
+			$statement->num($label, $value);
 		}
 
 		foreach ($this->value_sets as $label => $value)
 		{
-			$statement->set($label, $value);
+			$statement->str($label, $value);
 		}
 	}
 
