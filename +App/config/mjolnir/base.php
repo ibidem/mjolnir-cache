@@ -1,4 +1,4 @@
 <?php return array
 	(
-		'caching' => true,
+		'caching' => false,
 	);
