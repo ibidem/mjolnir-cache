@@ -17,7 +17,7 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 	const EXT = '.cache'; # extention for cache files
 
 	/**
-	 * @return \mjolnir\types\Cache
+	 * @return static
 	 */
 	static function instance()
 	{

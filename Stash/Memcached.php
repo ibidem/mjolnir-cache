@@ -17,7 +17,7 @@ class Stash_Memcached extends \app\Instantiatable implements \mjolnir\types\Cach
 	protected $memcached;
 
 	/**
-	 * @return \mjolnir\types\Cache
+	 * @return static
 	 */
 	static function instance()
 	{
