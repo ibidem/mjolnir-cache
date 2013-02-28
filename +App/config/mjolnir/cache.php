@@ -39,7 +39,7 @@
 	
 		'File' => array
 			(
-				'cache.dir' => APPPATH.'cache'.DIRECTORY_SEPARATOR.'file.cache'.DIRECTORY_SEPARATOR,
+				'cache.dir' => ETCPATH.'cache'.DIRECTORY_SEPARATOR.'file.cache'.DIRECTORY_SEPARATOR,
 				'lifetime.default' => 3600,
 			
 				// truecking indicates if failure to remove a cache file 
