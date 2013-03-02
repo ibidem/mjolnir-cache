@@ -150,10 +150,12 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 	 */
 	function flush()
 	{
-		\app\Filesystem::purge
-			(
-				\app\CFS::config('mjolnir/cache')['File']['cache.dir']
-			);
+		$cachedir = \app\CFS::config('mjolnir/cache')['File']['cache.dir'];
+
+		if (\file_exists($cachedir))
+		{
+			\app\Filesystem::purge($cachedir);
+		}
 	}
 
 } # class

@@ -28,7 +28,7 @@ class Stash_Memcache extends \app\Instantiatable implements \mjolnir\types\Cache
 
 		if ( ! \class_exists('Memcache'))
 		{
-			throw new \app\Exception('memcache extention not loaded.');
+			return \app\Stash_Null::instance();
 		}
 
 		$instance = parent::instance();
