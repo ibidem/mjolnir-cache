@@ -123,11 +123,11 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 
 					if (\file_exists($cache_file))
 					{
-						\mjolnir\log('Bug', 'Failed to delete '.$cache_file, 'Bugs');
+						\mjolnir\log('Error', 'Failed to delete '.$cache_file);
 					}
 					else # we failed initially, but managed to eventually
 					{
-						\mjolnir\log('Bug', 'Bad permissions on cache file ['.$cache_file.']; has been mitigated via permission auto-adjust. Potential configuration mistake.', 'Bugs');
+						\mjolnir\log('Error', 'Bad permissions on cache file ['.$cache_file.']; has been mitigated via permission auto-adjust. Potential configuration mistake.');
 					}
 				}
 			}
