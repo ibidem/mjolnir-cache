@@ -2,7 +2,7 @@
 
 return array
 	(
-		'mjolnir\stash' => array
+		'mjolnir\cache' => array
 			(
 				 'extension=php_apc' => function ()
 					{
