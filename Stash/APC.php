@@ -16,7 +16,7 @@ class Stash_APC extends \app\Instantiatable implements \mjolnir\types\Cache
 	 */
 	static function instance($contextual = true)
 	{
-		if ($contextual && ! \app\CFS::config('mjolnir/base')['caching'])
+		if (($contextual && ! \app\CFS::config('mjolnir/base')['caching']) || ! \app\CFS::config('mjolnir/cache')['APC']['enabled'])
 		{
 			return \app\Stash_Null::instance();
 		}

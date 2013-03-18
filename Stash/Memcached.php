@@ -21,7 +21,7 @@ class Stash_Memcached extends \app\Instantiatable implements \mjolnir\types\Cach
 	 */
 	static function instance($contextual = true)
 	{
-		if ($contextual && ! \app\CFS::config('mjolnir/base')['caching'])
+		if (($contextual && ! \app\CFS::config('mjolnir/base')['caching']) || ! \app\CFS::config('mjolnir/cache')['Memcached']['enabled'])
 		{
 			return \app\Stash_Null::instance();
 		}

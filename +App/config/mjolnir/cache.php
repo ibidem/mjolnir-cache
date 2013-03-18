@@ -6,11 +6,13 @@
 
 		'APC' => array
 			(
+				'enabled' => false,
 				'lifetime.default' => 3600,
 			),
 
 		'Memcached' => array
 			(
+				'enabled' => false,
 				'lifetime.default' => 3600,
 				'compression' => true, // Use Zlib compression
 
@@ -37,6 +39,7 @@
 
 		'Memcache' => array
 			(
+				'enabled' => false,
 				'lifetime.default' => 3600,
 				'host' => 'localhost',
 				'port' => 11211,
@@ -44,6 +47,7 @@
 
 		'File' => array
 			(
+				'enabled' => true, # intentionally enabled, with everything else disabled
 				'cache.dir' => ETCPATH.'cache'.DIRECTORY_SEPARATOR.'file.cache'.DIRECTORY_SEPARATOR,
 				'lifetime.default' => 3600,
 
