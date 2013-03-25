@@ -6,22 +6,28 @@
 // HowTo: order honeypot -n 'mjolnir\cache'
 
 
+class Stash_APC extends \mjolnir\cache\Stash_APC
+{
+	/** @return \app\Stash_APC */
+	static function instance($contextual = true) { return parent::instance($contextual); }
+}
+
 class Stash_File extends \mjolnir\cache\Stash_File
 {
 	/** @return \app\Stash_File */
-	static function instance() { return parent::instance(); }
-}
-
-class Stash_Memcache extends \mjolnir\cache\Stash_Memcache
-{
-	/** @return \app\Stash_Memcache */
-	static function instance() { return parent::instance(); }
+	static function instance($contextual = true) { return parent::instance($contextual); }
 }
 
 class Stash_Memcached extends \mjolnir\cache\Stash_Memcached
 {
 	/** @return \app\Stash_Memcached */
-	static function instance() { return parent::instance(); }
+	static function instance($contextual = true) { return parent::instance($contextual); }
+}
+
+class Stash_Memcache extends \mjolnir\cache\Stash_Memcache
+{
+	/** @return \app\Stash_Memcache */
+	static function instance($contextual = true) { return parent::instance($contextual); }
 }
 
 class Stash_Null extends \mjolnir\cache\Stash_Null

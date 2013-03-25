@@ -12,7 +12,7 @@ return array
 						{
 							return [ 'failed' => 'disabled' ];
 						}
-	
+
 						if (\extension_loaded('APC'))
 						{
 							return 'available';
@@ -27,7 +27,7 @@ return array
 						{
 							return [ 'failed' => 'disabled' ];
 						}
-						
+
 						if (\class_exists('Memcache'))
 						{
 							return 'available';
@@ -35,14 +35,14 @@ return array
 
 						return 'failed';
 					},
-					
+
 				'extension=php_memcached' => function () use ($cache_config)
 					{
 						if ( ! $cache_config['Memcached']['enabled'])
 						{
 							return [ 'failed' => 'disabled' ];
 						}
-						
+
 						if (\class_exists('Memcached'))
 						{
 							return 'available';
@@ -50,20 +50,20 @@ return array
 
 						return 'failed';
 					},
-							
+
 				'ETCPATH/cache' => function () use ($cache_config)
 					{
 						if ( ! $cache_config['File']['enabled'])
 						{
 							return [ 'failed' => 'disabled' ];
 						}
-						
-						if ( ! \file_exists(ETCPATH.'cache/'))
+
+						if ( ! \file_exists(\app\Env::key('etc.path').'cache/'))
 						{
 							return 'error';
 						}
-						
-						if ( ! \is_writable(ETCPATH.'cache/'))
+
+						if ( ! \is_writable(\app\Env::key('etc.path').'cache/'))
 						{
 							return 'error';
 						}

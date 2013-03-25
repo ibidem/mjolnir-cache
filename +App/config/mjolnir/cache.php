@@ -48,7 +48,7 @@
 		'File' => array
 			(
 				'enabled' => true, # intentionally enabled, with everything else disabled
-				'cache.dir' => ETCPATH.'cache'.DIRECTORY_SEPARATOR.'file.cache'.DIRECTORY_SEPARATOR,
+				'cache.dir' => \app\Env::key('etc.path').'cache/file.cache/',
 				'lifetime.default' => 3600,
 
 				// truecking indicates if failure to remove a cache file
