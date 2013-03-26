@@ -24,6 +24,15 @@ class Stash
 	}
 	
 	/**
+	 * @return \mjolnir\types\Cache
+	 */
+	static function instance()
+	{
+		static::$instance or static::init();
+		return static::$instance;
+	}
+	
+	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
 	static function set($key, $data, $expires = null)
