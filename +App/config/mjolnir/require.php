@@ -10,7 +10,7 @@ return array
 					{
 						if ( ! $cache_config['APC']['enabled'])
 						{
-							return [ 'failed' => 'disabled' ];
+							return [ 'available' => 'disabled' ];
 						}
 
 						if (\extension_loaded('APC'))
@@ -25,7 +25,7 @@ return array
 					{
 						if ( ! $cache_config['Memcache']['enabled'])
 						{
-							return [ 'failed' => 'disabled' ];
+							return [ 'available' => 'disabled' ];
 						}
 
 						if (\class_exists('Memcache'))
@@ -40,7 +40,7 @@ return array
 					{
 						if ( ! $cache_config['Memcached']['enabled'])
 						{
-							return [ 'failed' => 'disabled' ];
+							return [ 'available' => 'disabled' ];
 						}
 
 						if (\class_exists('Memcached'))
