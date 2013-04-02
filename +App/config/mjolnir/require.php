@@ -10,12 +10,12 @@ return array
 					{
 						if ( ! $cache_config['APC']['enabled'])
 						{
-							return [ 'available' => 'disabled' ];
+							return [ 'satisfied' => 'disabled' ];
 						}
 
 						if (\extension_loaded('APC'))
 						{
-							return 'available';
+							return 'satisfied';
 						}
 
 						return 'failed';
@@ -25,12 +25,12 @@ return array
 					{
 						if ( ! $cache_config['Memcache']['enabled'])
 						{
-							return [ 'available' => 'disabled' ];
+							return [ 'satisfied' => 'disabled' ];
 						}
 
 						if (\class_exists('Memcache'))
 						{
-							return 'available';
+							return 'satisfied';
 						}
 
 						return 'failed';
@@ -40,12 +40,12 @@ return array
 					{
 						if ( ! $cache_config['Memcached']['enabled'])
 						{
-							return [ 'available' => 'disabled' ];
+							return [ 'satisfied' => 'disabled' ];
 						}
 
 						if (\class_exists('Memcached'))
 						{
-							return 'available';
+							return 'satisfied';
 						}
 
 						return 'failed';
@@ -68,7 +68,7 @@ return array
 							return 'error';
 						}
 
-						return 'available';
+						return 'satisfied';
 					},
 			),
 	);
