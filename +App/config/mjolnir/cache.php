@@ -45,6 +45,12 @@
 				'port' => 11211,
 			),
 
+		'TempMemory' => array
+			(
+				'enabled' => true,
+				'lifetime.default' => 3600,
+			),
+
 		'File' => array
 			(
 				'enabled' => true, # intentionally enabled, with everything else disabled
