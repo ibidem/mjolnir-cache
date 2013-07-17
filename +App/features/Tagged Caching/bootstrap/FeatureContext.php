@@ -18,7 +18,7 @@ class FeatureContext extends BehatContext
 	 * @var \mjolnir\types\TaggedStash
 	 */
 	protected $driver;
-	
+
     /**
      * Initializes context.
      * Every scenario gets it's own context object.
@@ -29,7 +29,7 @@ class FeatureContext extends BehatContext
     {
 		// do nothing
 	}
-	
+
 	/**
      * @Given /^a cache driver "([^"]*)"$/
      */
@@ -38,7 +38,7 @@ class FeatureContext extends BehatContext
 		$class = '\app\Stash_'.\ucfirst($driver);
 		$this->driver = $class::instance();
     }
-	
+
     /**
      * @Given /^I store a value "([^"]*)" under a key "([^"]*)" and tag "([^"]*)"$/
      */

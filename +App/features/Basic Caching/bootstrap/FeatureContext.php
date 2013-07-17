@@ -18,7 +18,7 @@ class FeatureContext extends BehatContext
 	 * @var \mjolnir\types\Stash
 	 */
 	protected $driver;
-	
+
     /**
      * Initializes context.
      * Every scenario gets it's own context object.
@@ -29,7 +29,7 @@ class FeatureContext extends BehatContext
     {
 		// do nothing
 	}
-	
+
 	/**
      * @Given /^a cache driver "([^"]*)"$/
      */
@@ -54,7 +54,7 @@ class FeatureContext extends BehatContext
     {
         \app\expects($data)->equals($this->driver->get($key));
     }
-	
+
 	/**
      * @Given /^I delete the cache key "([^"]*)"$/
      */
@@ -81,32 +81,32 @@ class FeatureContext extends BehatContext
 		foreach ($elements as $element)
 		{
 			$def = \explode(' => ', $element);
-			
+
 			if ($def[1] === 'true')
 			{
 				$def[1] = true;
 			}
-			
+
 			if ($def[1] === 'false')
 			{
 				$def[1] = false;
 			}
-			
+
 			if (\is_numeric($def[0]))
 			{
 				$def[0] = (int) $def[0];
 			}
-			
+
 			if (\is_numeric($def[1]))
 			{
 				$def[1] = (int) $def[1];
 			}
-			
+
 			$array[$def[0]] = $def[1];
 		}
-		
+
 		$this->last_array = $array;
-		
+
 		$this->driver->set($key, $array);
     }
 

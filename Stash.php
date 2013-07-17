@@ -13,7 +13,7 @@ class Stash
 	 * @var \mjolnir\types\Cache
 	 */
 	static protected $instance = null;
-	
+
 	/**
 	 * ...
 	 */
@@ -22,7 +22,7 @@ class Stash
 		$class = '\app\Stash_'.\app\CFS::config('mjolnir/cache')['default.cache'];
 		static::$instance = $class::instance();
 	}
-	
+
 	/**
 	 * @return \mjolnir\types\Cache
 	 */
@@ -31,7 +31,7 @@ class Stash
 		static::$instance or static::init();
 		return static::$instance;
 	}
-	
+
 	/**
 	 * Store a value under a key for a certain number of seconds.
 	 */
@@ -43,7 +43,7 @@ class Stash
 
 	/**
 	 * Retrieves data from $key
-	 * 
+	 *
 	 * @return mixed data or default
 	 */
 	static function get($key, $default = null)
@@ -60,7 +60,7 @@ class Stash
 		static::$instance or static::init();
 		static::$instance->delete($key);
 	}
-	
+
 	/**
 	 * Wipe cache.
 	 */
@@ -69,7 +69,7 @@ class Stash
 		static::$instance or static::init();
 		static::$instance->flush();
 	}
-	
+
 	/**
 	 * Stores data in $key, tagged with tags.
 	 */
@@ -87,13 +87,13 @@ class Stash
 		static::$instance or static::init();
 		static::$instance->purge($tags);
 	}
-	
+
 	/**
-	 * When timers is not provided the timers are retrieved automatically from 
+	 * When timers is not provided the timers are retrieved automatically from
 	 * the model. (timers act as invalidators for the stash)
-	 * 
+	 *
 	 * Model must be provided in proper case. No prefix.
-	 * 
+	 *
 	 * @return array tags for given parameters
 	 */
 	static function tags($model, array $timers = null)
@@ -101,22 +101,22 @@ class Stash
 		// clean model; remove Model_ prefix if present
 		$model = \preg_replace
 			(
-				'#^Model_#', '', 
+				'#^Model_#', '',
 				\join('', \array_slice(\explode('\\', $model), -1))
 			);
-		
+
 		if ($timers === null)
 		{
 			$class = '\app\Model_'.$model;
 			$timers = $class::timers();
 		}
-		
+
 		$tags = [];
 		foreach ($timers as $timer)
 		{
 			$tags[] = $model.'__'.$timer;
 		}
-		
+
 		return $tags;
 	}
 
