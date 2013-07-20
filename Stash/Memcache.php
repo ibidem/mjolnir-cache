@@ -43,10 +43,12 @@ class Stash_Memcache extends \app\Instantiatable implements \mjolnir\types\Cache
 
 	/**
 	 * Store a value under a key for a certain number of seconds.
+	 *
+	 * @return static $this
 	 */
 	function set($key, $data, $expires = null)
 	{
-		$key = static::safe_key($key);
+		$key = $this->generate_key($key);
 		$config = \app\CFS::config('mjolnir/cache')['Memcache'];
 		if ($expires === null)
 		{
@@ -54,6 +56,8 @@ class Stash_Memcache extends \app\Instantiatable implements \mjolnir\types\Cache
 		}
 
 		$this->memcache->set($key, \serialize($data), MEMCACHE_COMPRESSED, $expires);
+
+		return $this;
 	}
 
 	/**
@@ -63,7 +67,7 @@ class Stash_Memcache extends \app\Instantiatable implements \mjolnir\types\Cache
 	 */
 	function get($key, $default = null)
 	{
-		$key = static::safe_key($key);
+		$key = $this->generate_key($key);
 		$value = $this->memcache->get($key);
 
 		if ($value !== false)
@@ -78,19 +82,27 @@ class Stash_Memcache extends \app\Instantiatable implements \mjolnir\types\Cache
 
 	/**
 	 * Deletes $key
+	 *
+	 * @return static $this
 	 */
 	function delete($key)
 	{
-		$key = static::safe_key($key);
+		$key = $this->generate_key($key);
 		$this->memcache->delete($key);
+
+		return $this;
 	}
 
 	/**
 	 * Wipe cache.
+	 *
+	 * @return static $this
 	 */
 	function flush()
 	{
 		$this->memcache->flush();
+
+		return $this;
 	}
 
 } # class

@@ -63,6 +63,8 @@ class Stash_Memcached extends \app\Instantiatable implements \mjolnir\types\Cach
 
 	/**
 	 * Store a value under a key for a certain number of seconds.
+	 *
+	 * @return static $this
 	 */
 	function set($key, $data, $expires = null)
 	{
@@ -74,10 +76,12 @@ class Stash_Memcached extends \app\Instantiatable implements \mjolnir\types\Cach
 
 		static::instance()->memcached->set
 			(
-				static::safe_key($key),
+				$this->generate_key($key),
 				\serialize($data),
 				$expires
 			);
+
+		return $this;
 	}
 
 	/**
@@ -87,7 +91,7 @@ class Stash_Memcached extends \app\Instantiatable implements \mjolnir\types\Cach
 	 */
 	function get($key, $default = null)
 	{
-		$result = \unserialize($this->memcached->get(static::safe_key($key)));
+		$result = \unserialize($this->memcached->get($this->generate_key($key)));
 		if (\Memcached::RES_SUCCESS === $this->memcached->getResultCode())
 		{
 			return $result;
@@ -100,18 +104,26 @@ class Stash_Memcached extends \app\Instantiatable implements \mjolnir\types\Cach
 
 	/**
 	 * Deletes $key
+	 *
+	 * @return static $this
 	 */
 	function delete($key)
 	{
-		$this->memcached->delete(static::safe_key($key), 0);
+		$this->memcached->delete($this->generate_key($key), 0);
+
+		return $this;
 	}
 
 	/**
 	 * Wipe cache.
+	 *
+	 * @return static $this
 	 */
 	function flush()
 	{
 		$this->memcached->flush();
+
+		return $this;
 	}
 
 } # class

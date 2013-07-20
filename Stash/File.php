@@ -38,10 +38,12 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 
 	/**
 	 * Store a value under a key for a certain number of seconds.
+	 *
+	 * @return static $this
 	 */
 	function set($key, $data, $expires = null)
 	{
-		$key = static::safe_key($key);
+		$key = $this->generate_key($key);
 		$cache = \app\CFS::config('mjolnir/cache')['File'];
 
 		if ($expires === null)
@@ -70,6 +72,8 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 		{
 			\mjolnir\log_exception($e);
 		}
+
+		return $this;
 	}
 
 	/**
@@ -79,7 +83,7 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 	 */
 	function get($key, $default = null)
 	{
-		$key = static::safe_key($key);
+		$key = $this->generate_key($key);
 		$cache_file = \app\CFS::config('mjolnir/cache')['File']['cache.dir'].$key.static::EXT;
 
 		if (\file_exists($cache_file))
@@ -103,11 +107,13 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 
 	/**
 	 * Deletes $key
+	 *
+	 * @return static $this
 	 */
 	function delete($key)
 	{
 		$cache = \app\CFS::config('mjolnir/cache')['File'];
-		$cache_file = $cache['cache.dir'].static::safe_key($key).static::EXT;
+		$cache_file = $cache['cache.dir'].$this->generate_key($key).static::EXT;
 
 		if (\file_exists($cache_file))
 		{
@@ -143,10 +149,14 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 				}
 			}
 		}
+
+		return $this;
 	}
 
 	/**
 	 * Wipes cache.
+	 *
+	 * @return static $this
 	 */
 	function flush()
 	{
@@ -156,6 +166,8 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 		{
 			\app\Filesystem::purge($cachedir);
 		}
+
+		return $this;
 	}
 
 } # class

@@ -31,6 +31,8 @@ class Stash_APC extends \app\Instantiatable implements \mjolnir\types\Cache
 
 	/**
 	 * Store a value under a key for a certain number of seconds.
+	 *
+	 * @return static $this
 	 */
 	function set($key, $data, $expires = null)
 	{
@@ -49,6 +51,8 @@ class Stash_APC extends \app\Instantiatable implements \mjolnir\types\Cache
 		{
 			\mjolnir\log_exception($e);
 		}
+
+		return $this;
 	}
 
 	/**
@@ -65,18 +69,25 @@ class Stash_APC extends \app\Instantiatable implements \mjolnir\types\Cache
 
 	/**
 	 * Deletes a cache key
+	 *
+	 * @return static $this
 	 */
 	function delete($key)
 	{
 		\apc_delete($key);
+
+		return $this;
 	}
 
 	/**
 	 * Wipes cache.
+	 *
+	 * @return static $this
 	 */
 	function flush()
 	{
 		\apc_clear_cache();
+		return $this;
 	}
 
 } # class

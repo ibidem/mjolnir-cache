@@ -17,10 +17,12 @@ class Stash_Null extends \app\Instantiatable implements \mjolnir\types\Cache
 
 	/**
 	 * Store a value under a key for a certain number of seconds.
+	 *
+	 * @return static $this
 	 */
 	function set($key, $data, $expires = null)
 	{
-		// do nothing
+		return $this;
 	}
 
 	/**
@@ -35,34 +37,42 @@ class Stash_Null extends \app\Instantiatable implements \mjolnir\types\Cache
 
 	/**
 	 * Deletes $key
+	 *
+	 * @return static $this
 	 */
 	function delete($key)
 	{
-		// do nothing
+		return $this;
 	}
 
 	/**
 	 * Wipe cache.
+	 *
+	 * @return static $this
 	 */
 	function flush()
 	{
-		// do nothing
+		return $this;
 	}
 
 	/**
 	 * Tags the data key for reference.
+	 *
+	 * @return static $this
 	 */
 	function store($key, $data, array $tags = [], $expires = null)
 	{
-		// do nothing
+		return $this;
 	}
 
 	/**
 	 * Removes cache entries tagged with specified tags.
+	 *
+	 * @return static $this
 	 */
 	function purge(array $tags)
 	{
-		// do nothing
+		return $this;
 	}
 
 	/**

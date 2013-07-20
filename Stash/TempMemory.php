@@ -41,10 +41,12 @@ class Stash_TempMemory extends \app\Instantiatable implements \mjolnir\types\Cac
 
 	/**
 	 * Store a value under a key for a certain number of seconds.
+	 *
+	 * @return static $this
 	 */
 	function set($key, $data, $expires = null)
 	{
-		$key = static::safe_key($key);
+		$key = $this->generate_key($key);
 		$cache = \app\CFS::config('mjolnir/cache')['TempMemory'];
 
 		if ($expires === null)
@@ -57,6 +59,8 @@ class Stash_TempMemory extends \app\Instantiatable implements \mjolnir\types\Cac
 				'expires' => \time() + $expires,
 				'data' => $data
 			);
+
+		return $this;
 	}
 
 	/**
@@ -66,7 +70,7 @@ class Stash_TempMemory extends \app\Instantiatable implements \mjolnir\types\Cac
 	 */
 	function get($key, $default = null)
 	{
-		$key = static::safe_key($key);
+		$key = $this->generate_key($key);
 
 		if (isset(static::$memory[$key]))
 		{
@@ -89,18 +93,26 @@ class Stash_TempMemory extends \app\Instantiatable implements \mjolnir\types\Cac
 
 	/**
 	 * Deletes $key
+	 *
+	 * @return static $this
 	 */
 	function delete($key)
 	{
 		unset(static::$memory[$key]);
+
+		return $this;
 	}
 
 	/**
 	 * Wipes cache.
+	 *
+	 * @return static $this
 	 */
 	function flush()
 	{
 		static::$memory = [];
+
+		return $this;
 	}
 
 } # class
