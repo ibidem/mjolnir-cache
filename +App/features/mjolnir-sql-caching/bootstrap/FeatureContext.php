@@ -1,11 +1,12 @@
 <?php
 
 use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Exception\PendingException;
+	Behat\Behat\Context\TranslatedContextInterface,
+	Behat\Behat\Context\BehatContext,
+	Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+	Behat\Gherkin\Node\TableNode;
+use app\Assert;
 
 \mjolnir\cfs\Mjolnir::behat();
 
@@ -16,20 +17,20 @@ use Behat\Gherkin\Node\PyStringNode,
  */
 class FeatureContext extends BehatContext
 {
-    /**
-     * Initializes context.
-     * Every scenario gets it's own context object.
-     *
-     * @param array $parameters context parameters (set them up through behat.yml)
-     */
-    public function __construct(array $parameters)
-    {
+	/**
+	 * Initializes context.
+	 * Every scenario gets it's own context object.
+	 *
+	 * @param array $parameters context parameters (set them up through behat.yml)
+	 */
+	function __construct(array $parameters)
+	{
 		$base = \app\CFS::config('mjolnir/base');
 		if ( ! isset($base['caching']) || ! $base['caching'])
 		{
 			throw new \app\Exception('Caching is not enabled.');
 		}
-    }
+	}
 
 	/**
 	 * @BeforeFeature
@@ -47,7 +48,7 @@ class FeatureContext extends BehatContext
 			(
 				'test_table',
 				'
-					`id`    :key_primary,
+					`id`	:key_primary,
 					`title` :title,
 
 					PRIMARY KEY(`id`)
@@ -73,11 +74,11 @@ class FeatureContext extends BehatContext
 	 */
 	protected $querie, $result;
 
-    /**
-     * @Given /^a mock database with ids "([^"]*)" and titles "([^"]*)"$/
-     */
-    public function aMockDatabaseWithIdsAndTitles($ids, $titles)
-    {
+	/**
+	 * @Given /^a mock database with ids "([^"]*)" and titles "([^"]*)"$/
+	 */
+	function aMockDatabaseWithIdsAndTitles($ids, $titles)
+	{
 		$ids = \explode(', ', $ids);
 		$titles = \explode(', ', $titles);
 
@@ -110,14 +111,14 @@ class FeatureContext extends BehatContext
 		}
 
 		\app\SQL::commit();
-    }
+	}
 
-    /**
-     * @Given /^a sql-cache querie$/
-     */
-    public function aSqlCacheQuerie()
-    {
-        $this->querie = \app\SQLStash::prepare
+	/**
+	 * @Given /^a sql-cache querie$/
+	 */
+	function aSqlCacheQuerie()
+	{
+		$this->querie = \app\SQLStash::prepare
 			(
 				__METHOD__,
 				'SELECT * FROM :table'
@@ -126,45 +127,45 @@ class FeatureContext extends BehatContext
 			->identity('__test')
 			->table('test_table')
 			->timers(['my_table_update']);
-    }
+	}
 
-    /**
-     * @When /^I execute the querie( again)?$/
-     */
-    public function iExecuteTheQuerie()
-    {
-        $this->result = $this->querie->fetch_all();
-    }
+	/**
+	 * @When /^I execute the querie( again)?$/
+	 */
+	function iExecuteTheQuerie()
+	{
+		$this->result = $this->querie->fetch_all();
+	}
 
-    /**
-     * @Then /^I should get the ids "([^"]*)"$/
-     */
-    public function iShouldGetTheIds($expected)
-    {
+	/**
+	 * @Then /^I should get the ids "([^"]*)"$/
+	 */
+	function iShouldGetTheIds($expected)
+	{
 		$actual = \app\Arr::implode(', ', $this->result, function ($i, $v) {
 			return $v['id'];
 		});
 
-		\app\expects($expected)->equals($actual);
-    }
+		Assert::that($expected)->equals($actual);
+	}
 
-    /**
-     * @Given /^I should get the titles "([^"]*)"$/
-     */
-    public function iShouldGetTheTitles($expected)
-    {
-        $actual = \app\Arr::implode(', ', $this->result, function ($i, $v) {
+	/**
+	 * @Given /^I should get the titles "([^"]*)"$/
+	 */
+	function iShouldGetTheTitles($expected)
+	{
+		$actual = \app\Arr::implode(', ', $this->result, function ($i, $v) {
 			return $v['title'];
 		});
 
-		\app\expects($expected)->equals($actual);
-    }
+		Assert::that($expected)->equals($actual);
+	}
 
-    /**
-     * @When /^I add an item with id "([^"]*)" and title "([^"]*)" to the database$/
-     */
-    public function iAddAnItemWithIdAndTitleToTheDatabase($id, $title)
-    {
+	/**
+	 * @When /^I add an item with id "([^"]*)" and title "([^"]*)" to the database$/
+	 */
+	function iAddAnItemWithIdAndTitleToTheDatabase($id, $title)
+	{
 		\app\SQL::prepare
 			(
 				__METHOD__,
@@ -178,33 +179,33 @@ class FeatureContext extends BehatContext
 			->run();
 
 		\app\Stash::purge(['my_table_update']);
-    }
+	}
 
-    /**
-     * @Given /^I ask for all items again$/
-     */
-    public function iAskForAllItemsAgain()
-    {
-        $this->result = $this->querie->fetch_all();
-    }
+	/**
+	 * @Given /^I ask for all items again$/
+	 */
+	function iAskForAllItemsAgain()
+	{
+		$this->result = $this->querie->fetch_all();
+	}
 
-    /**
-     * @When /^I limit the querie to page "([^"]*)", limit "([^"]*)" and offset "([^"]*)"$/
-     */
-    public function iLimitTheQuerieToPageLimitAndOffset($page, $limit, $offset)
-    {
+	/**
+	 * @When /^I limit the querie to page "([^"]*)", limit "([^"]*)" and offset "([^"]*)"$/
+	 */
+	function iLimitTheQuerieToPageLimitAndOffset($page, $limit, $offset)
+	{
 		$page = (int) $page;
 		$limit = (int) $limit;
 		$offset = (int) $offset;
-        $this->querie->page($page, $limit, $offset);
-    }
+		$this->querie->page($page, $limit, $offset);
+	}
 
-    /**
-     * @Given /^I sort the query by "([^"]*)"$/
-     */
-    public function iSortTheQueryBy($sort)
-    {
-        $criterias = \explode(', ', $sort);
+	/**
+	 * @Given /^I sort the query by "([^"]*)"$/
+	 */
+	function iSortTheQueryBy($sort)
+	{
+		$criterias = \explode(', ', $sort);
 		$order = [];
 		foreach ($criterias as $criteria)
 		{
@@ -213,14 +214,14 @@ class FeatureContext extends BehatContext
 		}
 
 		$this->querie->order($order);
-    }
+	}
 
-    /**
-     * @Given /^I constraint the query to "([^"]*)"$/
-     */
-    public function iConstraintTheQueryTo($conditions)
-    {
-        $criterias = \explode(', ', $conditions);
+	/**
+	 * @Given /^I constraint the query to "([^"]*)"$/
+	 */
+	function iConstraintTheQueryTo($conditions)
+	{
+		$criterias = \explode(', ', $conditions);
 		$constraints = [];
 		foreach ($criterias as $criteria)
 		{
@@ -240,6 +241,6 @@ class FeatureContext extends BehatContext
 		}
 
 		$this->querie->constraints($constraints);
-    }
+	}
 
 }
