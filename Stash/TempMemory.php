@@ -98,6 +98,7 @@ class Stash_TempMemory extends \app\Instantiatable implements \mjolnir\types\Cac
 	 */
 	function delete($key)
 	{
+		$key = $this->generate_key($key);
 		unset(static::$memory[$key]);
 
 		return $this;
