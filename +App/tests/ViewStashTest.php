@@ -2,7 +2,7 @@
 
 use \mjolnir\cache\ViewStash;
 
-class ViewStashTest extends \PHPUnit_Framework_TestCase
+class ViewStashTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

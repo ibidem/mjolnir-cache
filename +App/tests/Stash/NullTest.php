@@ -2,7 +2,7 @@
 
 use \mjolnir\cache\Stash_Null;
 
-class Stash_NullTest extends \PHPUnit_Framework_TestCase
+class Stash_NullTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

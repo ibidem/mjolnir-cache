@@ -2,7 +2,7 @@
 
 use \mjolnir\cache\Stash_APC;
 
-class Stash_APCTest extends \PHPUnit_Framework_TestCase
+class Stash_APCTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

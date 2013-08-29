@@ -2,7 +2,7 @@
 
 use \mjolnir\cache\Stash_Memcached;
 
-class Stash_MemcachedTest extends \PHPUnit_Framework_TestCase
+class Stash_MemcachedTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()
