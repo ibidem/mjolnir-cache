@@ -124,7 +124,7 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 				if (\file_exists($cache_file))
 				{
 					// try adjusting permissions
-					\chmod($cache_file, 0700);
+					\chmod($cache_file, 0770);
 					@\unlink($cache_file);
 
 					if (\file_exists($cache_file))
@@ -144,7 +144,7 @@ class Stash_File extends \app\Instantiatable implements \mjolnir\types\Cache
 				if (\file_exists($cache_file))
 				{
 					// try adjusting permissions
-					\chmod($cache_file, 0700);
+					\chmod($cache_file, 0770);
 					\unlink($cache_file); # intentionally ommited @
 				}
 			}
